@@ -18,7 +18,8 @@ use glam::{vec3, vec4, Mat4, Vec3};
 use parking_lot::Mutex;
 
 fn spawn_emitters(world: &mut World) {
-    let track = Track::from_wav(std::fs::read("../../../elements/example_assets/ambience.wav").unwrap().to_vec()).unwrap();
+    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../audio/assets/dun_dun_dun.wav");
+    let track = Track::from_wav(std::fs::read(path).unwrap().to_vec()).unwrap();
 
     let count = 1;
     for i in 0..count {

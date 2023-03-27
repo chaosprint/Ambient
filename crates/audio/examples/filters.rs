@@ -7,15 +7,9 @@ fn main() {
 
     let mixer = stream.mixer();
 
-    // let ambience = Track::from_wav(
-    //     Cursor::new(include_bytes!("../assets/ambience.wav")),
-    //     "Ambience".into(),
-    // )
-    // .unwrap()
-    // .as_source();
-
-    let source = Track::from_vorbis(
-        std::fs::read("example_assets/footstep04.ogg")
+    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("assets/amen_break.wav");
+    let source = Track::from_wav(
+        std::fs::read(path)
             .unwrap()
             .to_vec(),
     )

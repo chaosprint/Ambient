@@ -47,6 +47,9 @@ tracing-tree = { workspace = true, optional = true }
 tracing-subscriber = { workspace = true, optional = true }
 tracing-log = { workspace = true, optional = true }
 
+lazy_static = { workspace = true }
+cpal = { workspace = true }
+glicol = { workspace = true }
 anyhow = { workspace = true }
 bincode = { workspace = true }
 byteorder = { workspace = true }

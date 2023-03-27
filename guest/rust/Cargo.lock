@@ -1048,6 +1048,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "synthero"
+version = "0.2.0-dev"
+dependencies = [
+ "ambient_api",
+ "palette",
+]
+
+[[package]]
 name = "text"
 version = "0.2.0-dev"
 dependencies = [

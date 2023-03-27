@@ -162,8 +162,10 @@ async fn main() {
         bandwidth: 6.0,
     }));
 
+    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("assets/amen_break.wav");
+
     let ambience = Track::from_wav(
-        std::fs::read("example_assets/ambience.wav")
+        std::fs::read(path)
             .unwrap()
             .to_vec(),
     )
@@ -171,7 +173,7 @@ async fn main() {
     .decode()
     .repeat();
 
-    let chord_source = SineWave::new(523.25);
+    let chord_source = SineWave::new(440.);
     // .gain(0.25)
     // .mix(SineWave::new(659.25).gain(0.25))
     // .mix(SineWave::new(783.99).gain(0.25));

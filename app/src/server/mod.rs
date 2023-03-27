@@ -10,6 +10,7 @@ use ambient_ecs::{
     dont_store, world_events, ComponentDesc, ComponentRegistry, Entity, Networked, SystemGroup, World, WorldEventsSystem,
     WorldStreamCompEvent,
 };
+
 use ambient_network::{
     persistent_resources,
     server::{ForkingEvent, GameServer, ShutdownEvent},

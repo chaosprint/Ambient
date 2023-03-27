@@ -7,17 +7,21 @@ use rand::{seq::SliceRandom, thread_rng};
 fn main() -> color_eyre::Result<()> {
     let stream = AudioStream::new()?;
 
+    let path1 = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("assets/amen_break.wav");
     let track1 = Track::from_wav(
-        std::fs::read("example_assets/Thunder-Mike_Koenig-315681025.wav")
+        std::fs::read(path1)
             .unwrap()
             .to_vec(),
-    )?;
+    )
+    .unwrap();
 
-    let track2 = Track::from_vorbis(
-        std::fs::read("example_assets/Apocalypse.ogg")
+    let path2 = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("assets/dun_dun_dun.wav");
+    let track2 = Track::from_wav(
+        std::fs::read(path2)
             .unwrap()
             .to_vec(),
-    )?;
+    )
+    .unwrap();
 
     let sources = vec![track1, track2];
 

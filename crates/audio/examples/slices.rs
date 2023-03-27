@@ -7,8 +7,13 @@ fn main() -> color_eyre::Result<()> {
     let stream = AudioStream::new()?;
     let mixer = stream.mixer();
 
-    let track = Track::from_wav(std::fs::read("example_assets/ak47.wav").unwrap().to_vec())?;
-
+    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("assets/amen_break.wav");
+    let track = Track::from_wav(
+        std::fs::read(path)
+            .unwrap()
+            .to_vec(),
+    )
+    .unwrap();
     eprintln!("Track: {track:?}");
 
     let slices = [

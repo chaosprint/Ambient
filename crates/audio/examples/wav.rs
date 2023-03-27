@@ -3,8 +3,9 @@ use ambient_sys::time::Instant;
 use ambient_audio::{track::Track, AudioStream, Source};
 
 fn main() {
+    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("assets/amen_break.wav");
     let track = Track::from_wav(
-        std::fs::read("example_assets/thunder.wav")
+        std::fs::read(path)
             .unwrap()
             .to_vec(),
     )
