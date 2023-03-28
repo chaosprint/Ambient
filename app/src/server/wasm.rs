@@ -77,10 +77,11 @@ pub fn initialize(world: &mut World, project_path: PathBuf, manifest: &ambient_p
             MessageType::Stdout => ("stdoutserver", log::Level::Info),
             MessageType::Stderr => {
 
-                println!("{}", message);
-                let mut code_guard = code.lock().unwrap();
-                *code_guard = message.to_owned();
-                has_update.store(true, Ordering::SeqCst);
+                if message.starts_with("[glicol_msg]") {
+                    let mut code_guard = code.lock().unwrap();
+                    *code_guard = message.replace("[glicol_msg]", "").trim_start().to_owned();
+                    has_update.store(true, Ordering::SeqCst);
+                }
                 ("stderrserver", log::Level::Info)
             },
         };
@@ -156,7 +157,7 @@ where
     let mut engine = Engine::<BLOCK_SIZE>::new();
     engine.livecoding = false;
     engine.set_sr(sr);
-    engine.update_with_code("o: saw ~freq >> mul ~amp;~freq: sig 100;~amp: sig 0 >> adsr 0.05 0.1 0.6 0.9");
+    engine.update_with_code("o: saw ~freq >> lpf 300.0 1.0 >> mul ~amp >> plate 0.1;~freq: sig 100;~amp: sig 0 >> adsr 0.05 0.1 0.6 0.2");
     // engine.set_bpm(bpm);
     let channels = 2 as usize; //config.channels as usize;
     let err_fn = |err| eprintln!("an error occurred on stream: {}", err);
