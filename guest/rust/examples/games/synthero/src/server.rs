@@ -6,6 +6,7 @@ use ambient_api::{
         camera::aspect_ratio_from_window,
         primitives::{cube, quad},
         player::player,
+        prefab::{prefab_from_url, spawned},
         rendering::{ pbr_material_from_url, color, cast_shadows, outline},
         transform::{lookat_center, scale, translation},
     },
@@ -81,11 +82,15 @@ pub async fn main() -> EventResult {
     for x in 0..3 {
         let id = Entity::new()
             .with_merge(make_transformable())
-            .with_default(cube())
-            .with(translation(), vec3(x as f32 - 1., 3., 0.4))
-            .with(scale(), vec3(block_width * 0.7, block_length * 0.7, 0.3))
+            // .with_default(cube())
+            .with(prefab_from_url(), asset::url("assets/Cylinder.glb").unwrap())
+            .with(translation(), vec3(x as f32 - 1., 3., 0.8))
+            .with(components::is_the_best(), true)
+            .with(scale(), vec3(block_width * 0.4, block_length * 0.4, 0.3))
             .with(color(), vec4(0.9, 0.1, 0.1, 0.7))
             .spawn();
+
+        entity::wait_for_component(id, spawned()).await;
         cells.push(id);
     }
 
@@ -120,49 +125,73 @@ pub async fn main() -> EventResult {
             let keys_released = &delta.keys_released;
             if keys.contains(&KeyCode::Left) {
                 x = (x + 3 - 1) % 3;
+                match x {
+                    0 => println!("[glicol_msg]~freq, 0, 0, {:.4}", 440.0*2.0_f32.powf(( 40.-69.0)/12.0)),
+                    1 => println!("[glicol_msg]~freq, 0, 0, {:.4}", 440.0*2.0_f32.powf(( 43.-69.0)/12.0)),
+                    2 => println!("[glicol_msg]~freq, 0, 0, {:.4}", 440.0*2.0_f32.powf(( 45.-69.0)/12.0)),
+                    _ => (),
+                }
             }
             if keys.contains(&KeyCode::Right) {
                 x = (x + 1) % 3;
+                match x {
+                    0 => println!("[glicol_msg]~freq, 0, 0, {:.4}", 440.0*2.0_f32.powf(( 40.-69.0)/12.0)),
+                    1 => println!("[glicol_msg]~freq, 0, 0, {:.4}", 440.0*2.0_f32.powf(( 43.-69.0)/12.0)),
+                    2 => println!("[glicol_msg]~freq, 0, 0, {:.4}", 440.0*2.0_f32.powf(( 45.-69.0)/12.0)),
+                    _ => (),
+                }
             }
             if keys.contains(&KeyCode::Up)  {
                 x = (x + 3 - 1) % 3;
+                match x {
+                    0 => println!("[glicol_msg]~freq, 0, 0, {:.4}", 440.0*2.0_f32.powf(( 40.-69.0)/12.0)),
+                    1 => println!("[glicol_msg]~freq, 0, 0, {:.4}", 440.0*2.0_f32.powf(( 43.-69.0)/12.0)),
+                    2 => println!("[glicol_msg]~freq, 0, 0, {:.4}", 440.0*2.0_f32.powf(( 45.-69.0)/12.0)),
+                    _ => (),
+                }
             }
             if keys.contains(&KeyCode::Down)  {
                 x = (x + 1) % 3;
+                match x {
+                    0 => println!("[glicol_msg]~freq, 0, 0, {:.4}", 440.0*2.0_f32.powf(( 40.-69.0)/12.0)),
+                    1 => println!("[glicol_msg]~freq, 0, 0, {:.4}", 440.0*2.0_f32.powf(( 43.-69.0)/12.0)),
+                    2 => println!("[glicol_msg]~freq, 0, 0, {:.4}", 440.0*2.0_f32.powf(( 45.-69.0)/12.0)),
+                    _ => (),
+                }
             }
             let cell = x;
 
             let cell = if keys.contains(&KeyCode::Key1) {
+                println!("[glicol_msg]~freq, 0, 0, {:.4}", 440.0*2.0_f32.powf(( 40.-69.0)/12.0));
                 0
             } else if keys.contains(&KeyCode::Key2) {
+                println!("[glicol_msg]~freq, 0, 0, {:.4}", 440.0*2.0_f32.powf(( 43.-69.0)/12.0));
                 1
             } else if keys.contains(&KeyCode::Key3) {
+                println!("[glicol_msg]~freq, 0, 0, {:.4}", 440.0*2.0_f32.powf(( 45.-69.0)/12.0));
                 2
             } else {
                 cell
             };
-
-            if keys.contains(&KeyCode::Key3) {
-                let cell = 2;
-            }
 
             entity::add_component_if_required(cells[cell as usize], outline(), player_color);
             entity::set_component(player, components::cell(), cell);
 
             if keys.contains(&KeyCode::Space) {
                 pressed.store(true, Ordering::Relaxed);
-                entity::set_component(cells[cell as usize], scale(), vec3(block_width * 0.7, block_length * 0.7, 0.1));
-                match cell {
-                    0 => println!("[glicol_msg]~freq, 0, 0, {:.4}; ~amp, 0, 0, 1", 440.0*2.0_f32.powf(( 40.-69.0)/12.0)),
-                    1 => println!("[glicol_msg]~freq, 0, 0, {:.4}; ~amp, 0, 0, 1", 440.0*2.0_f32.powf(( 43.-69.0)/12.0)),
-                    2 => println!("[glicol_msg]~freq, 0, 0, {:.4}; ~amp, 0, 0, 1", 440.0*2.0_f32.powf(( 45.-69.0)/12.0)),
-                    _ => (),
-                }
+                entity::set_component(cells[cell as usize], scale(), vec3(block_width * 0.4, block_length * 0.4, 0.1));
+                println!("[glicol_msg]~amp, 0, 0, 1");
+                // match cell {
+                //     0 => println!("[glicol_msg]~freq, 0, 0, {:.4}; ~amp, 0, 0, 1", 440.0*2.0_f32.powf(( 40.-69.0)/12.0)),
+                //     1 => println!("[glicol_msg]~freq, 0, 0, {:.4}; ~amp, 0, 0, 1", 440.0*2.0_f32.powf(( 43.-69.0)/12.0)),
+                //     2 => println!("[glicol_msg]~freq, 0, 0, {:.4}; ~amp, 0, 0, 1", 440.0*2.0_f32.powf(( 45.-69.0)/12.0)),
+                //     _ => (),
+                // }
             }
             // need to figure out the logic for which blocks are pressed
             if keys_released.contains(&KeyCode::Space) {
                 pressed.store(false, Ordering::Relaxed);
-                entity::set_component(cells[cell as usize], scale(), vec3(block_width * 0.7, block_length * 0.7, 0.3));
+                entity::set_component(cells[cell as usize], scale(), vec3(block_width * 0.4, block_length * 0.4, 0.3));
                 println!("[glicol_msg]~amp, 0, 0, 0");
 
                 // when released, no blocks are pressed, for sure

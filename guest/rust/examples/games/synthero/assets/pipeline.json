@@ -1,11 +1,18 @@
-{
-  "pipeline": {
-    "type": "Materials",
-    "importer": {
-      "type": "Single",
-      "name": "squirrel",
-      "base_color": "squirrel.png"
-    },
-    "output_quads": true
-  }
-}
+[{
+    "pipeline": {
+        "type": "Models",
+        "prefab_components": {
+            "synthero::is_the_best": false
+        }
+    }
+}, {
+    "pipeline": {
+        "type": "Materials",
+        "importer": {
+        "type": "Single",
+        "name": "squirrel",
+        "base_color": "squirrel.png"
+        },
+        "output_quads": true
+    }
+}]

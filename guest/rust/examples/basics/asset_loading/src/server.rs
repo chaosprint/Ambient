@@ -26,15 +26,15 @@ pub async fn main() -> EventResult {
         .spawn();
     entity::wait_for_component(cube_id, spawned()).await;
 
-    on(event::FRAME, move |_| {
-        entity::set_component(
-            cube_id,
-            rotation(),
-            Quat::from_axis_angle(Vec3::X, time().sin()),
-        );
+    // on(event::FRAME, move |_| {
+    //     entity::set_component(
+    //         cube_id,
+    //         rotation(),
+    //         Quat::from_axis_angle(Vec3::X, time().sin()),
+    //     );
 
-        EventOk
-    });
+    //     EventOk
+    // });
 
     EventOk
 }
