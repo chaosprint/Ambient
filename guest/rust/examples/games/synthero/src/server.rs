@@ -4,9 +4,9 @@ use ambient_api::{
     components::core::{
         app::main_scene,
         camera::aspect_ratio_from_window,
-        primitives::cube,
+        primitives::{cube, quad},
         player::player,
-        rendering::{color, cast_shadows, outline},
+        rendering::{ pbr_material_from_url, color, cast_shadows, outline},
         transform::{lookat_center, scale, translation},
     },
     concepts::{make_perspective_infinite_reverse_camera, make_transformable},
@@ -16,14 +16,14 @@ use ambient_api::{
 use components::cell;
 use palette::{FromColor, Hsl, Srgb};
 
-use std::sync::{
-    atomic::{AtomicBool, Ordering},
-    Arc,
-};
+// use std::sync::{
+//     atomic::{AtomicBool, Ordering},
+//     Arc,
+// };
 
-use ambient_api::{
-    message::server::{MessageExt, Source, Target},
-};
+// use ambient_api::{
+//     message::server::{MessageExt, Source, Target},
+// };
 
 #[main]
 pub async fn main() -> EventResult {
@@ -37,17 +37,20 @@ pub async fn main() -> EventResult {
 
     let board_length = 20.0;
     let board_width = 3.0;
-    let board_height = 0.1;
+    let board_height = 0.2;
     let rolling_speed = 0.1;
 
     let board = Entity::new()
-        .with_merge(make_transformable())
-        .with_default(cube())
-        .with(translation(), vec3(0., -board_length / 2.0, 0.))
-        .with(scale(), vec3(board_width, board_length, board_height))
-        .with(color(), vec4(175./255., 102./255., 0., 0.8))
-        .with_default(cast_shadows())
-        .spawn();
+    .with_merge(make_transformable())
+    .with_default(cube())
+    .with(translation(), vec3(0., -board_length / 2.0, 0.))
+    .with(scale(), vec3(board_width, board_length, board_height))
+    .with(
+        pbr_material_from_url(),
+        asset::url("assets/pipeline.json/0/mat.json").unwrap(),
+    )
+    .with_default(cast_shadows())
+    .spawn();
 
     let mut cells = Vec::new();
     for x in 0..3 {
@@ -124,20 +127,21 @@ pub async fn main() -> EventResult {
             if keys.contains(&KeyCode::Space) {
                 entity::set_component(cells[cell as usize], color(), player_color);
                 match cell {
-                    0 => println!("~freq, 0, 0, 100; ~amp, 0, 0, 1"),
-                    1 => println!("~freq, 0, 0, 200; ~amp, 0, 0, 1"),
-                    2 => println!("~freq, 0, 0, 300; ~amp, 0, 0, 1"),
+                    0 => println!("[glicol_msg]~freq, 0, 0, 261.63; ~amp, 0, 0, 1"),
+                    1 => println!("[glicol_msg]~freq, 0, 0, 329.63; ~amp, 0, 0, 1"),
+                    2 => println!("[glicol_msg]~freq, 0, 0, 392.00; ~amp, 0, 0, 1"),
                     _ => (),
                 }
             }
             if keys_released.contains(&KeyCode::Space) {
                 entity::set_component(cells[cell as usize], color(), vec4(0.2, 0.2, 0.2, 0.5));
-                match cell {
-                    0 => println!("~freq, 0, 0, 100; ~amp, 0, 0, 0"),
-                    1 => println!("~freq, 0, 0, 200; ~amp, 0, 0, 0"),
-                    2 => println!("~freq, 0, 0, 300; ~amp, 0, 0, 0"),
-                    _ => (),
-                }
+                println!("[glicol_msg]~amp, 0, 0, 0");
+                // match cell {
+                //     0 => println!("~amp, 0, 0, 0"),
+                //     1 => println!("~amp, 0, 0, 0"),
+                //     2 => println!("~amp, 0, 0, 0"),
+                //     _ => (),
+                // }
             }
         }
 
