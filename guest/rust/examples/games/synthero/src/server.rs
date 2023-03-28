@@ -153,9 +153,9 @@ pub async fn main() -> EventResult {
                 pressed.store(true, Ordering::Relaxed);
                 entity::set_component(cells[cell as usize], scale(), vec3(block_width * 0.7, block_length * 0.7, 0.1));
                 match cell {
-                    0 => println!("[glicol_msg]~freq, 0, 0, 261.63; ~amp, 0, 0, 1"),
-                    1 => println!("[glicol_msg]~freq, 0, 0, 293.66; ~amp, 0, 0, 1"),
-                    2 => println!("[glicol_msg]~freq, 0, 0, 329.63; ~amp, 0, 0, 1"),
+                    0 => println!("[glicol_msg]~freq, 0, 0, 41.20; ~amp, 0, 0, 1"),
+                    1 => println!("[glicol_msg]~freq, 0, 0, 49.00; ~amp, 0, 0, 1"),
+                    2 => println!("[glicol_msg]~freq, 0, 0, 55.00; ~amp, 0, 0, 1"),
                     _ => (),
                 }
             }
@@ -195,8 +195,9 @@ pub async fn main() -> EventResult {
             }
         }
 
+        let speed_scale = 0.2;
         let mut position = entity::get_component::<Vec3>(board, translation()).unwrap_or_default();
-        position.y += rolling_speed * 0.1;
+        position.y += rolling_speed * speed_scale;
         if position.y > board_length / 2.0 {
             position.y = -board_length / 2.0;
         }
@@ -204,12 +205,15 @@ pub async fn main() -> EventResult {
         entity::set_component(board, translation(), position);
         for block in &blocks {
             let mut position = entity::get_component::<Vec3>(*block, translation()).unwrap_or_default();
-            position.y += rolling_speed * 0.1;
+            position.y += rolling_speed * speed_scale;
+
+            if position.y > board_length / 2.0 {
+                position.y = -board_length / 2.0;
+            }
             entity::set_component(*block, translation(), position);
         }
 
         EventOk
     });
-
     EventOk
 }

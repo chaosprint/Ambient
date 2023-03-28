@@ -42,7 +42,6 @@ pub fn initialize(world: &mut World, project_path: PathBuf, manifest: &ambient_p
     // let code_ptr= Arc::new(AtomicPtr::<u8>::new(ptr));
     // let code_len = Arc::new(AtomicUsize::new(code.len()));
     let has_update = Arc::new(AtomicBool::new(true));
-
     // let _code_ptr = Arc::clone(&code_ptr);
     // let _code_len = Arc::clone(&code_len);
     let _has_update = Arc::clone(&has_update);
@@ -139,7 +138,6 @@ pub fn initialize(world: &mut World, project_path: PathBuf, manifest: &ambient_p
     Ok(())
 }
 
-
 pub fn run_audio<T>(
     device: &cpal::Device,
     config: &cpal::StreamConfig,
@@ -157,27 +155,24 @@ where
     let mut engine = Engine::<BLOCK_SIZE>::new();
     engine.livecoding = false;
     engine.set_sr(sr);
-    engine.update_with_code("o: saw ~freq >> lpf 300.0 1.0 >> mul ~amp >> plate 0.1;~freq: sig 100;~amp: sig 0 >> adsr 0.05 0.1 0.6 0.2");
-    // engine.set_bpm(bpm);
-    let channels = 2 as usize; //config.channels as usize;
+    engine.update_with_code(
+"~osc1: saw ~freq >> mul 0.5;
+~osc2: saw ~freq2 >> mul 0.5;
+o: mix ~osc1 ~osc2 >> lpf 300.0 1.0 >> mul ~amp >> plate 0.1;
+~freq: sig 100;
+~freq2: ~freq >> add 1;
+~amp: sig 0 >> adsr 0.01 0.01 0.9 0.1"
+    );
+    let channels = 2 as usize;
     let err_fn = |err| eprintln!("an error occurred on stream: {}", err);
     let stream = device.build_output_stream(
         config,
         move |data: &mut [T], _: &cpal::OutputCallbackInfo| {
             if _has_update.load(Ordering::Acquire) {
                 let code_guard = code_clone.lock().unwrap();
-                // engine.update_with_code(&code_guard);
                 engine.send_msg(&code_guard);
                 _has_update.store(false, Ordering::Release);
             };
-            // if _has_update.load(Ordering::Acquire) {
-            //     let ptr = _code_ptr.load(Ordering::Acquire);
-            //     let len = _code_len.load(Ordering::Acquire);
-            //     let encoded:&[u8] = unsafe { std::slice::from_raw_parts(ptr, len) };
-            //     let code = std::str::from_utf8(encoded.clone()).unwrap().to_owned();
-            //     engine.update_with_code(&code);
-            //     _has_update.store(false, Ordering::Release);
-            // };
             let block_step = data.len() / channels;
             let blocks_needed = block_step / BLOCK_SIZE;
             let block_step = channels * BLOCK_SIZE;
@@ -196,22 +191,4 @@ where
     )?;
     stream.play()?;
     loop {}
-    // loop {
-        // std::thread::sleep(std::time::Duration::from_millis(100));
-        // let modified_time = metadata(&path)?.modified()?;
-
-        // if modified_time != last_modified_time || has_update.load(Ordering::SeqCst) {
-        //     last_modified_time = modified_time;
-        //     let file = File::open(&path)?;
-        //     let reader = BufReader::new(file);
-        //     code = "".to_owned();
-        //     for line in reader.lines() {
-        //         code.push_str(&line?);
-        //         code.push_str("\n");
-        //     }
-        //     code_ptr.store(unsafe {code.as_bytes_mut().as_mut_ptr() }, Ordering::SeqCst);
-        //     code_len.store(code.len(), Ordering::SeqCst);
-        //     has_update.store(true, Ordering::SeqCst);
-        // }
-    // }
 }
