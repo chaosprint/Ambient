@@ -16,14 +16,7 @@ use ambient_api::{
 use components::cell;
 use palette::{FromColor, Hsl, Srgb};
 
-// use std::sync::{
-//     atomic::{AtomicBool, Ordering},
-//     Arc,
-// };
-
-// use ambient_api::{
-//     message::server::{MessageExt, Source, Target},
-// };
+use crate::components::{grid_side_length, grid_x, grid_y};
 
 #[main]
 pub async fn main() -> EventResult {
@@ -52,6 +45,33 @@ pub async fn main() -> EventResult {
     .with_default(cast_shadows())
     .spawn();
 
+
+    let n_rows = 30; // Number of rows of blocks.
+    let n_cols = 3; // Number of columns of blocks.
+
+    let block_width = board_width / n_cols as f32;
+    let block_height = 0.2;
+    let block_length = board_length / n_rows as f32;
+
+    for row in 0..n_rows {
+        for col in 0..n_cols {
+            Entity::new()
+                .with_merge(make_transformable())
+                .with_default(cube())
+                .with(
+                    translation(),
+                    vec3(
+                        col as f32 * block_width - board_width / 2.0 + block_width / 2.0,
+                        row as f32 * block_length - board_length / 2.0 + block_length / 2.0,
+                        block_height / 2.0,
+                    ),
+                )
+                .with(scale(), vec3(block_width * 0.9, block_length * 0.9, block_height))
+                .with(color(), vec4(0.9, 0.9, 0.9, 0.1))
+                .spawn();
+        }
+    };
+
     let mut cells = Vec::new();
     for x in 0..3 {
         let id = Entity::new()
@@ -70,7 +90,7 @@ pub async fn main() -> EventResult {
         }
     });
 
-    on(event::FRAME, move |delta_time| {
+    on(event::FRAME, move |_| {
 
         for cell in &cells {
             entity::remove_component(*cell, outline());
@@ -125,7 +145,8 @@ pub async fn main() -> EventResult {
             entity::set_component(player, components::cell(), cell);
 
             if keys.contains(&KeyCode::Space) {
-                entity::set_component(cells[cell as usize], color(), player_color);
+                entity::set_component(cells[cell as usize], scale(), vec3(0.9, 0.9, 0.1));
+                // entity::set_component(cells[cell as usize], color(), player_color);
                 match cell {
                     0 => println!("[glicol_msg]~freq, 0, 0, 261.63; ~amp, 0, 0, 1"),
                     1 => println!("[glicol_msg]~freq, 0, 0, 329.63; ~amp, 0, 0, 1"),
@@ -134,7 +155,8 @@ pub async fn main() -> EventResult {
                 }
             }
             if keys_released.contains(&KeyCode::Space) {
-                entity::set_component(cells[cell as usize], color(), vec4(0.2, 0.2, 0.2, 0.5));
+                entity::set_component(cells[cell as usize], scale(), vec3(0.9, 0.9, 0.3));
+                // entity::set_component(cells[cell as usize], color(), vec4(0.2, 0.2, 0.2, 0.5));
                 println!("[glicol_msg]~amp, 0, 0, 0");
                 // match cell {
                 //     0 => println!("~amp, 0, 0, 0"),
