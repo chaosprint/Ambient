@@ -16,10 +16,15 @@ use ambient_api::{
 use components::cell;
 use palette::{FromColor, Hsl, Srgb};
 
+use std::sync::{Arc, atomic::Ordering, atomic::AtomicBool};
+use std::sync::Mutex;
 use crate::components::{grid_side_length, grid_x, grid_y};
 
 #[main]
 pub async fn main() -> EventResult {
+    let mut pressed = Arc::new(AtomicBool::new(false));
+    let mut pressed_block = Arc::new(Mutex::new(vec![]));
+
     Entity::new()
         .with_merge(make_perspective_infinite_reverse_camera())
         .with(aspect_ratio_from_window(), EntityId::resources())
@@ -45,30 +50,30 @@ pub async fn main() -> EventResult {
     .with_default(cast_shadows())
     .spawn();
 
-
-    let n_rows = 30; // Number of rows of blocks.
+    let n_rows = 20; // Number of rows of blocks.
     let n_cols = 3; // Number of columns of blocks.
 
     let block_width = board_width / n_cols as f32;
     let block_height = 0.2;
     let block_length = board_length / n_rows as f32;
+    let mut blocks = vec![];
 
     for row in 0..n_rows {
         for col in 0..n_cols {
-            Entity::new()
+            blocks.push(Entity::new()
                 .with_merge(make_transformable())
                 .with_default(cube())
                 .with(
                     translation(),
                     vec3(
                         col as f32 * block_width - board_width / 2.0 + block_width / 2.0,
-                        row as f32 * block_length - board_length / 2.0 + block_length / 2.0,
-                        block_height / 2.0,
+                        row as f32 * block_length - board_length + block_length / 2.0,
+                        0.3,
                     ),
                 )
-                .with(scale(), vec3(block_width * 0.9, block_length * 0.9, block_height))
-                .with(color(), vec4(0.9, 0.9, 0.9, 0.1))
-                .spawn();
+                .with(scale(), vec3(block_width * 0.7, block_length * 0.7, block_height))
+                .with(color(), vec4(0.0, 0.9, 0.9, 0.8))
+                .spawn());
         }
     };
 
@@ -77,9 +82,9 @@ pub async fn main() -> EventResult {
         let id = Entity::new()
             .with_merge(make_transformable())
             .with_default(cube())
-            .with(translation(), vec3(x as f32 - 1., 3., 0.1))
-            .with(scale(), vec3(0.9, 0.9, 0.3))
-            .with(color(), vec4(0.2, 0.2, 0.2, 0.5))
+            .with(translation(), vec3(x as f32 - 1., 3., 0.4))
+            .with(scale(), vec3(block_width * 0.7, block_length * 0.7, 0.3))
+            .with(color(), vec4(0.9, 0.1, 0.1, 0.7))
             .spawn();
         cells.push(id);
     }
@@ -145,37 +150,63 @@ pub async fn main() -> EventResult {
             entity::set_component(player, components::cell(), cell);
 
             if keys.contains(&KeyCode::Space) {
-                entity::set_component(cells[cell as usize], scale(), vec3(0.9, 0.9, 0.1));
-                // entity::set_component(cells[cell as usize], color(), player_color);
+                pressed.store(true, Ordering::Relaxed);
+                entity::set_component(cells[cell as usize], scale(), vec3(block_width * 0.7, block_length * 0.7, 0.1));
                 match cell {
                     0 => println!("[glicol_msg]~freq, 0, 0, 261.63; ~amp, 0, 0, 1"),
-                    1 => println!("[glicol_msg]~freq, 0, 0, 329.63; ~amp, 0, 0, 1"),
-                    2 => println!("[glicol_msg]~freq, 0, 0, 392.00; ~amp, 0, 0, 1"),
+                    1 => println!("[glicol_msg]~freq, 0, 0, 293.66; ~amp, 0, 0, 1"),
+                    2 => println!("[glicol_msg]~freq, 0, 0, 329.63; ~amp, 0, 0, 1"),
                     _ => (),
                 }
             }
+            // need to figure out the logic for which blocks are pressed
             if keys_released.contains(&KeyCode::Space) {
-                entity::set_component(cells[cell as usize], scale(), vec3(0.9, 0.9, 0.3));
-                // entity::set_component(cells[cell as usize], color(), vec4(0.2, 0.2, 0.2, 0.5));
+                pressed.store(false, Ordering::Relaxed);
+                entity::set_component(cells[cell as usize], scale(), vec3(block_width * 0.7, block_length * 0.7, 0.3));
                 println!("[glicol_msg]~amp, 0, 0, 0");
-                // match cell {
-                //     0 => println!("~amp, 0, 0, 0"),
-                //     1 => println!("~amp, 0, 0, 0"),
-                //     2 => println!("~amp, 0, 0, 0"),
-                //     _ => (),
-                // }
+
+                // when released, no blocks are pressed, for sure
+                let mut pressed_vec = pressed_block.lock().unwrap();
+                for block in (*pressed_vec).iter() {
+                    entity::set_component(*block, scale(), vec3(block_width * 0.7, block_length * 0.7, block_height));
+                    entity::set_component(*block, color(), vec4(0.0, 0.9, 0.9, 0.8));
+                }
+                (*pressed_vec).clear();
+            }
+
+            pressed_block.lock().unwrap().clear();
+            if pressed.load(Ordering::Relaxed) {
+                let pressed_pos = entity::get_component::<Vec3>(cells[cell as usize], translation()).unwrap_or_default();
+                for block in &blocks {
+                    entity::set_component(*block, scale(), vec3(block_width * 0.7, block_length * 0.7, board_height));
+                    entity::set_component(*block, color(), vec4(0.0, 0.9, 0.9, 0.8));
+                    let mut blockpos = entity::get_component::<Vec3>(*block, translation()).unwrap_or_default();
+                    let is_overlap = (blockpos.y < pressed_pos.y + block_length * 0.7 && blockpos.y > pressed_pos.y - block_length * 0.7)
+                        && (blockpos.x < pressed_pos.x + block_width && blockpos.x > pressed_pos.x - block_width);
+                    if is_overlap {
+                        pressed_block.lock().unwrap().push(*block);
+                    }
+                }
+            }
+
+            for block in (*pressed_block.lock().unwrap()).iter() {
+                entity::set_component(*block, scale(), vec3(block_width * 0.7, block_length * 0.7, board_height/2.0));
+                entity::set_component(*block, color(), vec4(0.0, 0.2, 0.6, 0.5));
             }
         }
 
         let mut position = entity::get_component::<Vec3>(board, translation()).unwrap_or_default();
-
         position.y += rolling_speed * 0.1;
-
         if position.y > board_length / 2.0 {
             position.y = -board_length / 2.0;
         }
 
         entity::set_component(board, translation(), position);
+        for block in &blocks {
+            let mut position = entity::get_component::<Vec3>(*block, translation()).unwrap_or_default();
+            position.y += rolling_speed * 0.1;
+            entity::set_component(*block, translation(), position);
+        }
 
         EventOk
     });

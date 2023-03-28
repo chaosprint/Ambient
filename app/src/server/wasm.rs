@@ -72,9 +72,9 @@ pub fn initialize(world: &mut World, project_path: PathBuf, manifest: &ambient_p
     let messenger = Arc::new(move |world: &World, id: EntityId, type_: MessageType, message: &str| {
         let name = get_module_name(world, id);
         let (prefix, level) = match type_ {
-            MessageType::Info => ("infoserver", log::Level::Info),
-            MessageType::Error => ("errorserver", log::Level::Error),
-            MessageType::Stdout => ("stdoutserver", log::Level::Info),
+            MessageType::Info => ("info", log::Level::Info),
+            MessageType::Error => ("error", log::Level::Error),
+            MessageType::Stdout => ("stdout", log::Level::Info),
             MessageType::Stderr => {
 
                 if message.starts_with("[glicol_msg]") {
@@ -82,7 +82,7 @@ pub fn initialize(world: &mut World, project_path: PathBuf, manifest: &ambient_p
                     *code_guard = message.replace("[glicol_msg]", "").trim_start().to_owned();
                     has_update.store(true, Ordering::SeqCst);
                 }
-                ("stderrserver", log::Level::Info)
+                ("stderr", log::Level::Info)
             },
         };
 
