@@ -153,9 +153,9 @@ pub async fn main() -> EventResult {
                 pressed.store(true, Ordering::Relaxed);
                 entity::set_component(cells[cell as usize], scale(), vec3(block_width * 0.7, block_length * 0.7, 0.1));
                 match cell {
-                    0 => println!("[glicol_msg]~freq, 0, 0, 41.20; ~amp, 0, 0, 1"),
-                    1 => println!("[glicol_msg]~freq, 0, 0, 49.00; ~amp, 0, 0, 1"),
-                    2 => println!("[glicol_msg]~freq, 0, 0, 55.00; ~amp, 0, 0, 1"),
+                    0 => println!("[glicol_msg]~freq, 0, 0, {:.4}; ~amp, 0, 0, 1", 440.0*2.0_f32.powf(( 40.-69.0)/12.0)),
+                    1 => println!("[glicol_msg]~freq, 0, 0, {:.4}; ~amp, 0, 0, 1", 440.0*2.0_f32.powf(( 43.-69.0)/12.0)),
+                    2 => println!("[glicol_msg]~freq, 0, 0, {:.4}; ~amp, 0, 0, 1", 440.0*2.0_f32.powf(( 45.-69.0)/12.0)),
                     _ => (),
                 }
             }

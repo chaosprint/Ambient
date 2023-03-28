@@ -1,0 +1,3 @@
+# Synth Hero
+
+In this game, you will see grids flying towards you. Press the correct grid at the right time to produce pleasant music and accumulate coins. There are hints on the grids indicating whether or not to press them. There are three situations: green means that pressing the grid will result in a note that matches the original music, red represents a terrible note, and a question mark signifies a mystery box. There are several criteria for the number of coins earned, such as timing accuracy and creativity. Playing all green grids may not necessarily result in the highest score.

@@ -2031,7 +2031,7 @@ version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6fac387a98bb7c37292057cffc56d62ecb629900026402633ae9160df93a8766"
 dependencies = [
- "nom 7.1.3",
+ "nom",
 ]
 
 [[package]]
@@ -3027,12 +3027,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "evalexpr"
-version = "8.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aacfb566035f8cd02f6ec9247c242f3f9904a0b288ea383abcf4e95df6436a34"
-
-[[package]]
 name = "exr"
 version = "1.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3461,11 +3455,11 @@ dependencies = [
 
 [[package]]
 name = "glicol"
-version = "0.13.1"
+version = "0.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "60ca42027843cf62c49a4a1a40ec3281226308c36566fcf830f60b089b37ec8c"
+checksum = "88baa85deca4429ace914f0074d658e3b48cbec3a235dfb8b14b3709e937dab0"
 dependencies = [
- "glicol_macros 0.12.8",
+ "glicol_macros",
  "glicol_parser",
  "glicol_synth",
  "hashbrown 0.13.2",
@@ -3476,20 +3470,9 @@ dependencies = [
 
 [[package]]
 name = "glicol_macros"
-version = "0.12.8"
+version = "0.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "40da3c0f66bfe646e334a452e77d49e09b8dc5aaec4be9c7d36beb56be92d33c"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
-name = "glicol_macros"
-version = "0.13.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "672b006de3f31ff28e93788aa98af2fdbea8fbe16ac2bb6462c4aa2ddd8d9678"
+checksum = "efe3af5efb3df27cb73ca3e431af772e846e585bddb59e40ec5a15bf60ee8ec8"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3498,30 +3481,29 @@ dependencies = [
 
 [[package]]
 name = "glicol_parser"
-version = "0.13.1"
+version = "0.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6d1bbd4be485fac5fbbf1c23f9747575a1efd2788cc0280e8c09e4fd6869eefa"
+checksum = "83cd35536554f0c4e2615b68ba87c6885c972268d48889c701c602826fecac9a"
 dependencies = [
- "glicol_macros 0.13.1",
+ "fasteval",
+ "glicol_macros",
  "glicol_synth",
  "hashbrown 0.13.2",
- "meval",
  "pest",
  "pest_derive",
 ]
 
 [[package]]
 name = "glicol_synth"
-version = "0.13.1"
+version = "0.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ff89539d55d1cadbf0d384f1d063b8d8047a0c29243e57d59c54ce2f45d7129a"
+checksum = "f4c918901608c67bc85a986222ea1351fe6b0b38764e1a55b6024deb6aa8cc17"
 dependencies = [
  "arrayvec",
  "dasp_interpolate",
  "dasp_ring_buffer",
  "dasp_signal",
  "dasp_slice",
- "evalexpr",
  "fasteval",
  "hashbrown 0.13.2",
  "petgraph",
@@ -4654,16 +4636,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "meval"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f79496a5651c8d57cd033c5add8ca7ee4e3d5f7587a4777484640d9cb60392d9"
-dependencies = [
- "fnv",
- "nom 1.2.4",
-]
-
-[[package]]
 name = "mime"
 version = "0.3.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4916,12 +4888,6 @@ dependencies = [
  "rand 0.7.3",
  "rand_xorshift",
 ]
-
-[[package]]
-name = "nom"
-version = "1.2.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a5b8c256fd9471521bcb84c3cdba98921497f1a331cbc15b8030fc63b82050ce"
 
 [[package]]
 name = "nom"
@@ -8581,7 +8547,7 @@ version = "0.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "463705a63313cd4301184381c5e8042f0a7e9b4bb63653f216311d4ae74690b7"
 dependencies = [
- "nom 7.1.3",
+ "nom",
 ]
 
 [[package]]
