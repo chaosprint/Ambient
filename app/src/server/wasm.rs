@@ -76,11 +76,11 @@ pub fn initialize(world: &mut World, project_path: PathBuf, manifest: &ambient_p
             MessageType::Stdout => ("stdout", log::Level::Info),
             MessageType::Stderr => {
 
-                if message.starts_with("[glicol_msg]") {
+                if message.starts_with("[glicol_msg]") || message.starts_with("[glicol_code]") {
                     let mut code_guard = code.lock().unwrap();
-                    *code_guard = message.replace("[glicol_msg]", "").trim_start().to_owned();
+                    *code_guard = message.to_owned();
                     has_update.store(true, Ordering::SeqCst);
-                }
+                };
                 ("stderr", log::Level::Info)
             },
         };
@@ -155,14 +155,14 @@ where
     let mut engine = Engine::<BLOCK_SIZE>::new();
     engine.livecoding = false;
     engine.set_sr(sr);
-    engine.update_with_code(
-"~osc1: saw ~freq >> mul 0.5;
-~osc2: saw ~freq2 >> mul 0.5;
-o: mix ~osc1 ~osc2 >> lpf 300.0 1.0 >> mul ~amp >> plate 0.1;
-~freq: sig 100;
-~freq2: ~freq >> add 1;
-~amp: sig 0 >> adsr 0.01 0.01 0.9 0.1"
-    );
+//     engine.update_with_code(
+// "~osc1: saw ~freq >> mul 0.5;
+// ~osc2: saw ~freq2 >> mul 0.5;
+// o: mix ~osc1 ~osc2 >> lpf 300.0 1.0 >> mul ~amp >> plate 0.1;
+// ~freq: sig 100;
+// ~freq2: ~freq >> add 1;
+// ~amp: sig 0 >> adsr 0.01 0.01 0.9 0.1"
+//     );
     let channels = 2 as usize;
     let err_fn = |err| eprintln!("an error occurred on stream: {}", err);
     let stream = device.build_output_stream(
@@ -170,7 +170,11 @@ o: mix ~osc1 ~osc2 >> lpf 300.0 1.0 >> mul ~amp >> plate 0.1;
         move |data: &mut [T], _: &cpal::OutputCallbackInfo| {
             if _has_update.load(Ordering::Acquire) {
                 let code_guard = code_clone.lock().unwrap();
-                engine.send_msg(&code_guard);
+                if code_guard.starts_with("[glicol_msg]") {
+                    engine.send_msg(code_guard.replace("[glicol_msg]", "").trim_start());
+                } else if code_guard.starts_with("[glicol_code]") {
+                    engine.update_with_code(code_guard.replace("[glicol_code]", "").trim_start());
+                }
                 _has_update.store(false, Ordering::Release);
             };
             let block_step = data.len() / channels;

@@ -741,6 +741,7 @@ name = "physics"
 version = "0.2.0-dev"
 dependencies = [
  "ambient_api",
+ "log",
 ]
 
 [[package]]

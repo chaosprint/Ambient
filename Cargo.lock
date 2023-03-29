@@ -3456,16 +3456,23 @@ dependencies = [
 [[package]]
 name = "glicol"
 version = "0.13.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "88baa85deca4429ace914f0074d658e3b48cbec3a235dfb8b14b3709e937dab0"
 dependencies = [
- "glicol_macros",
+ "glicol_macros 0.13.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "glicol_parser",
  "glicol_synth",
  "hashbrown 0.13.2",
  "lcs-diff",
  "pest",
  "petgraph",
+]
+
+[[package]]
+name = "glicol_macros"
+version = "0.13.2"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
@@ -3482,11 +3489,9 @@ dependencies = [
 [[package]]
 name = "glicol_parser"
 version = "0.13.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "83cd35536554f0c4e2615b68ba87c6885c972268d48889c701c602826fecac9a"
 dependencies = [
  "fasteval",
- "glicol_macros",
+ "glicol_macros 0.13.2",
  "glicol_synth",
  "hashbrown 0.13.2",
  "pest",
@@ -3496,8 +3501,6 @@ dependencies = [
 [[package]]
 name = "glicol_synth"
 version = "0.13.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f4c918901608c67bc85a986222ea1351fe6b0b38764e1a55b6024deb6aa8cc17"
 dependencies = [
  "arrayvec",
  "dasp_interpolate",

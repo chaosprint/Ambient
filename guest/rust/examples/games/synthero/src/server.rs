@@ -180,19 +180,13 @@ pub async fn main() -> EventResult {
             if keys.contains(&KeyCode::Space) {
                 pressed.store(true, Ordering::Relaxed);
                 entity::set_component(cells[cell as usize], scale(), vec3(block_width * 0.4, block_length * 0.4, 0.1));
-                println!("[glicol_msg]~amp, 0, 0, 1");
-                // match cell {
-                //     0 => println!("[glicol_msg]~freq, 0, 0, {:.4}; ~amp, 0, 0, 1", 440.0*2.0_f32.powf(( 40.-69.0)/12.0)),
-                //     1 => println!("[glicol_msg]~freq, 0, 0, {:.4}; ~amp, 0, 0, 1", 440.0*2.0_f32.powf(( 43.-69.0)/12.0)),
-                //     2 => println!("[glicol_msg]~freq, 0, 0, {:.4}; ~amp, 0, 0, 1", 440.0*2.0_f32.powf(( 45.-69.0)/12.0)),
-                //     _ => (),
-                // }
+                println!("[glicol_msg]~env, 0, 0, 1");
             }
             // need to figure out the logic for which blocks are pressed
             if keys_released.contains(&KeyCode::Space) {
                 pressed.store(false, Ordering::Relaxed);
                 entity::set_component(cells[cell as usize], scale(), vec3(block_width * 0.4, block_length * 0.4, 0.3));
-                println!("[glicol_msg]~amp, 0, 0, 0");
+                println!("[glicol_msg]~env, 0, 0, 0");
 
                 // when released, no blocks are pressed, for sure
                 let mut pressed_vec = pressed_block.lock().unwrap();
@@ -244,5 +238,15 @@ pub async fn main() -> EventResult {
 
         EventOk
     });
+
+    println!(
+"[glicol_code]~osc1: saw ~freq >> mul 0.1;
+~osc2: saw ~freq2 >> mul 0.1;
+~mod: sin 1 >> mul 300 >> add 500
+o: mix ~osc1 ~osc2 >> lpf ~mod 3.0 >> mul ~env >> plate 0.1;
+~freq: sig 100;
+~freq2: ~freq >> add 1;
+~env: sig 0 >> adsr 0.01 0.01 0.9 0.1"
+);
     EventOk
 }
