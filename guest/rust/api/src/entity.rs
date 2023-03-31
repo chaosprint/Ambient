@@ -182,3 +182,7 @@ pub fn synchronized_resources() -> EntityId {
 pub fn persisted_resources() -> EntityId {
     wit::entity::persisted_resources().from_bindgen()
 }
+
+pub fn lol() -> String {
+    wit::entity::lol()
+}

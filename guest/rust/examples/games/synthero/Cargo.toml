@@ -1,0 +1,25 @@
+[package]
+name = "synthero"
+
+edition = "2021"
+publish = false
+rust-version = {workspace = true}
+version = {workspace = true}
+
+[dependencies]
+ambient_api = {workspace = true}
+palette = "0.6.1"
+
+# [[bin]]
+# name = "synthero_client"
+# path = "src/client.rs"
+# required-features = ["client"]
+
+[[bin]]
+name = "synthero_server"
+path = "src/server.rs"
+required-features = ["server"]
+
+[features]
+client = ["ambient_api/client"]
+server = ["ambient_api/server"]

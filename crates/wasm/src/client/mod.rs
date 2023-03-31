@@ -157,6 +157,10 @@ impl wit::entity::Host for Bindings {
     fn get_all(&mut self, index: u32) -> anyhow::Result<Vec<wit::types::EntityId>> {
         shared::implementation::entity::get_all(self.world_mut(), index)
     }
+
+    fn lol(&mut self) -> anyhow::Result<String> {
+        Ok("lol".to_string())
+    }
 }
 impl wit::component::Host for Bindings {
     fn get_index(&mut self, id: String) -> anyhow::Result<Option<u32>> {

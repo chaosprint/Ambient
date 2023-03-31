@@ -1,0 +1,20 @@
+[package]
+name = "keeper"
+
+edition = "2021"
+publish = false
+author = "Qichao Lan (chaosprint) @ Ambient"
+rust-version = {workspace = true}
+version = {workspace = true}
+
+[dependencies]
+ambient_api = {workspace = true}
+
+[[bin]]
+name = "keeper_server"
+path = "src/server.rs"
+required-features = ["server"]
+
+[features]
+client = ["ambient_api/client"]
+server = ["ambient_api/server"]

@@ -569,6 +569,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "453ad9f582a441959e5f0d088b02ce04cfe8d51a8eaf077f12ac6d3e94164ca6"
 
 [[package]]
+name = "keeper"
+version = "0.2.0-dev"
+dependencies = [
+ "ambient_api",
+]
+
+[[package]]
 name = "leb128"
 version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1047,6 +1054,14 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
+]
+
+[[package]]
+name = "synthero"
+version = "0.2.0-dev"
+dependencies = [
+ "ambient_api",
+ "palette",
 ]
 
 [[package]]

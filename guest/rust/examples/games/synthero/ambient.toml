@@ -1,0 +1,18 @@
+[project]
+id = "synthero"
+name = "Synth Hero"
+version = "0.0.1"
+
+[components]
+cell = { type = "I32", name = "Cell", description = "The ID of the cell this player is in", attributes = [
+    "Debuggable",
+] }
+grid_side_length = {name = "Grid Side Length", description = "The length of a grid side, ignoring the centre (i.e. if this is 10, the total axis length is 21)", type = "I32", attributes = ["Networked", "Debuggable"]}
+grid_x = {name = "Grid X", description = "X location of the cell on the grid", type = "I32", attributes = ["Networked", "Debuggable"]}
+grid_y = {name = "Grid Y", description = "Y location of the cell on the grid", type = "I32", attributes = ["Networked", "Debuggable"]}
+
+[components.is_the_best]
+type = "Bool"
+name = "Is The Best"
+description = "Declares whether or not the entity this is attached is the best."
+attributes = ["Networked", "Debuggable"]

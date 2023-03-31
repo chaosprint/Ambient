@@ -1,0 +1,19 @@
+[project]
+id = "keeper"
+name = "keeper"
+version = "0.0.1"
+
+# [components]
+# player_camera_ref = { type = "EntityId", name = "Player camera ref", description = "", attributes = [
+#     "Debuggable",
+# ] }
+
+[components]
+ball = { type = "Empty", name = "Ball", description = "Used to tag a ball" }
+
+
+[components.is_the_best]
+type = "Bool"
+name = "Is The Best"
+description = "Declares whether or not the entity this is attached is the best."
+attributes = ["Networked", "Debuggable"]

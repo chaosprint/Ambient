@@ -34,4 +34,6 @@ default interface entity {
     resources: func() -> entity-id
     synchronized-resources: func() -> entity-id
     persisted-resources: func() -> entity-id
+
+    lol: func() -> string
 }
