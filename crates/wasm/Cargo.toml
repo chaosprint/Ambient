@@ -7,6 +7,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+pretty_assertions = { workspace = true }
+futures = { workspace = true }
+ambient_asset_cache = { path = "../asset_cache" }
+ambient_audio = { path = "../audio" }
 ambient_sys = { path = "../sys" }
 ambient_animation = { path = "../animation" }
 ambient_app = { path = "../app" }

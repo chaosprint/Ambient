@@ -166,6 +166,10 @@ impl wit::audiosys::Host for Bindings {
         }
         Ok(49)
     }
+    fn add_sound(&mut self, name: String, url: String) -> anyhow::Result<()> {
+        println!("path {:?}", url);
+        Ok(())
+    }
 }
 
 impl wit::component::Host for Bindings {

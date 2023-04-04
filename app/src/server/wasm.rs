@@ -18,13 +18,19 @@ use cpal::{
     FromSample, SizedSample,
 };
 
+use ambient_sys::time::Instant;
+use ambient_audio::{track::Track, AudioStream, Source};
+
 use std::{thread}; // use std::time::{Instant};
 use std::sync::atomic::{AtomicBool, Ordering}; // AtomicUsize AtomicPtr
 use glicol::Engine;
 use std::sync::Mutex;
 
-const BLOCK_SIZE: usize = 128;
+// use std::collections::HashMap;
 
+use std::{time::Duration};
+
+const BLOCK_SIZE: usize = 128;
 
 pub fn systems() -> SystemGroup {
     ambient_wasm::server::systems()
@@ -34,7 +40,11 @@ pub fn initialize(world: &mut World, project_path: PathBuf, manifest: &ambient_p
 
     let code = Arc::new(Mutex::new(String::from("")));
     let code_clone = Arc::clone(&code);
+
+    let soundlib = Arc::new(Mutex::new(HashMap::new()));
+    let soundlib_clone = Arc::clone(&soundlib);
     world.set_code(code);
+    world.set_soundlib(soundlib);
 
     let messenger = Arc::new(|world: &World, id: EntityId, type_: MessageType, message: &str| {
         let name = get_module_name(world, id);
@@ -49,26 +59,60 @@ pub fn initialize(world: &mut World, project_path: PathBuf, manifest: &ambient_p
         log::log!(level, "[{name}] {prefix}: {}", message.strip_suffix('\n').unwrap_or(message));
     });
 
-    let host = cpal::default_host();
-    let device = host.default_output_device().expect("failed to find output device");
-    let config = device.default_output_config().unwrap();
-    println!("Default output config: {:?}", config);
     let _audio_thread = thread::spawn(move || {
-        let options = (code_clone, ());
-        match config.sample_format() {
-            cpal::SampleFormat::I8 => run_audio::<i8>(&device, &config.into(), options),
-            cpal::SampleFormat::I16 => run_audio::<i16>(&device, &config.into(), options),
-            cpal::SampleFormat::I32 => run_audio::<i32>(&device, &config.into(), options),
-            cpal::SampleFormat::I64 => run_audio::<i64>(&device, &config.into(), options),
-            cpal::SampleFormat::U8 => run_audio::<u8>(&device, &config.into(), options),
-            cpal::SampleFormat::U16 => run_audio::<u16>(&device, &config.into(), options),
-            cpal::SampleFormat::U32 => run_audio::<u32>(&device, &config.into(), options),
-            cpal::SampleFormat::U64 => run_audio::<u64>(&device, &config.into(), options),
-            cpal::SampleFormat::F32 => run_audio::<f32>(&device, &config.into(), options),
-            cpal::SampleFormat::F64 => run_audio::<f64>(&device, &config.into(), options),
-            sample_format => panic!("Unsupported sample format '{sample_format}'"),
+        let stream = AudioStream::new().unwrap();
+        loop {
+
+            let mut code_guard = code_clone.lock().unwrap();
+            if code_guard.contains("[play]") {
+                let code = code_guard.replace("[play]", "");
+                *code_guard = code;
+                // let url = match AbsAssetUrl::parse(code) {
+                //     Ok(value) => value,
+                //     Err(err) => {
+                //         log::warn!("Failed to parse client_bytecode_from_url url: {:?}", err);
+                //         continue;
+                //     }
+                // };
+                let soundlib_guard = soundlib_clone.lock().unwrap();
+                let url = soundlib_guard.get(&(*code_guard)).unwrap();
+
+
+                println!("url {}", url);
+                // url http://10.0.0.2:8999/content/assets/ping.ogg
+                let track = Track::from_vorbis(
+                    std::fs::read(&url)
+                        .unwrap()
+                        .to_vec(),
+                ).unwrap();
+
+                let source = track.decode();
+                let sound = stream.mixer().play(source);
+            }
+            std::thread::sleep(Duration::from_millis(24));
         }
     });
+
+    // let host = cpal::default_host();
+    // let device = host.default_output_device().expect("failed to find output device");
+    // let config = device.default_output_config().unwrap();
+    // println!("Default output config: {:?}", config);
+    // let _audio_thread = thread::spawn(move || {
+    //     let options = (code_clone, ());
+    //     match config.sample_format() {
+    //         cpal::SampleFormat::I8 => run_audio::<i8>(&device, &config.into(), options),
+    //         cpal::SampleFormat::I16 => run_audio::<i16>(&device, &config.into(), options),
+    //         cpal::SampleFormat::I32 => run_audio::<i32>(&device, &config.into(), options),
+    //         cpal::SampleFormat::I64 => run_audio::<i64>(&device, &config.into(), options),
+    //         cpal::SampleFormat::U8 => run_audio::<u8>(&device, &config.into(), options),
+    //         cpal::SampleFormat::U16 => run_audio::<u16>(&device, &config.into(), options),
+    //         cpal::SampleFormat::U32 => run_audio::<u32>(&device, &config.into(), options),
+    //         cpal::SampleFormat::U64 => run_audio::<u64>(&device, &config.into(), options),
+    //         cpal::SampleFormat::F32 => run_audio::<f32>(&device, &config.into(), options),
+    //         cpal::SampleFormat::F64 => run_audio::<f64>(&device, &config.into(), options),
+    //         sample_format => panic!("Unsupported sample format '{sample_format}'"),
+    //     }
+    // });
 
     ambient_wasm::server::initialize(world, messenger)?;
 

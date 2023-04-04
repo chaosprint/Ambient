@@ -119,8 +119,9 @@ pub struct World {
     ignore_query_inits: bool,
     query_ticker: CloneableAtomicU64,
     code: std::sync::Arc<std::sync::Mutex<String>>,
-    // engine: Engine<128>,
+    soundlib: std::sync::Arc<std::sync::Mutex<HashMap<String, String>>>,
 }
+
 impl World {
     pub fn new(name: &'static str) -> Self {
         Self::new_with_config(name, true)
@@ -129,7 +130,6 @@ impl World {
         Self::new_with_config_internal(name, resources)
     }
     fn new_with_config_internal(name: &'static str, resources: bool) -> Self {
-
 
         let mut world = Self {
             name,
@@ -141,6 +141,7 @@ impl World {
             ignore_query_inits: false,
             query_ticker: CloneableAtomicU64::new(0),
             code: std::sync::Arc::new(std::sync::Mutex::new(String::new())),
+            soundlib: std::sync::Arc::new(std::sync::Mutex::new(HashMap::new())),
         };
         if resources {
             world.spawn_with_id(EntityId::resources(), Entity::new());
@@ -152,9 +153,18 @@ impl World {
         self.code = code;
     }
 
+    pub fn set_soundlib(&mut self, lib: std::sync::Arc<std::sync::Mutex<HashMap<String, String>>>) {
+        self.soundlib = lib;
+    }
+
     pub fn modify_code(&mut self, new_code: String) {
         let mut code = self.code.lock().unwrap();
         *code = new_code;
+    }
+
+    pub fn add_sound(&mut self, name: String, url: String) {
+        let mut soundlib = self.soundlib.lock().unwrap();
+        soundlib.insert(name, url);
     }
 
     /// Clones all entities specified in the source world and returns a new world with them

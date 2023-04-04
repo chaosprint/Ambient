@@ -16,15 +16,18 @@ use ambient_api::{
     prelude::*,
 };
 
+fn symbol(s: &str) -> String {
+    s.to_string()
+}
+
+fn url(s: &str) -> String {
+    s.to_string()
+}
+
 #[main]
 pub async fn main() {
 
-    // can do this for both client or server
-    // let audiosys = audio_sys::init().await; // without this, no audio
-    // audiosys.add_sound("assets/bonk.wav", "bonk").unwarp().await;
-    // audiosys.add_sound("assets/bgm.wav", "bgm").unwarp().await;
-
-    println!("{}", audiosys::init());
+    audiosys::add_sound(symbol("ping"), asset::url("assets/ping.ogg").unwrap());
 
     Entity::new()
         .with_merge(make_perspective_infinite_reverse_camera())
@@ -56,12 +59,14 @@ pub async fn main() {
         .spawn();
 
     on(event::FRAME, |_| {
+
         // audiosys.set_distance();
         // audiosys.set_angle();
     });
 
     on(event::COLLISION, |c| {
-
+        audiosys::init(symbol("[play]ping"));
+        // audiosys::get_sound("bonk").unwrap().volumn(0.2).play();
         // psedo code
         // if bonksound.lock().is_playing() {
             // bonksound.lock().fade_out(std::time::Duration::from_secs(0.1));
@@ -71,13 +76,13 @@ pub async fn main() {
         // sound::clip("bonk").play(); // -> play in client.wasm -> msg to client.rs.runtime -> clap/audioworklet
         // sound::script("o: sin 440").play().stop_after(std::time::Duration::from_secs(4.0));
         // entity::get_component(cube, sound()).unwrap().distance(30.).volumn(0.1/*TODO: calculate this*/).play();
-        println!("Bonk! {:?} collided", c.get(ids()).unwrap());
+        // println!("Bonk! {:?} collided", c.get(ids()).unwrap());
     });
 
     on(event::FRAME, move |_| {
         for hit in physics::raycast(Vec3::Z * 20., -Vec3::Z) {
             if hit.entity == cube {
-                println!("The raycast hit the cube: {hit:?}");
+                // println!("The raycast hit the cube: {hit:?}");
             }
         }
     });
@@ -87,6 +92,7 @@ pub async fn main() {
         let max_angular_velocity = 360.0f32.to_radians();
 
         sleep(5.).await;
+
 
         let new_linear_velocity = (random::<Vec3>() - 0.5) * 2. * max_linear_velocity;
         let new_angular_velocity = (random::<Vec3>() - 0.5) * 2. * max_angular_velocity;

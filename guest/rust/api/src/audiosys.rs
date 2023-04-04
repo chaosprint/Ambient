@@ -14,3 +14,8 @@ pub use wit::entity::{AnimationAction, AnimationController};
 pub fn init(code: String) -> u32 {
     wit::audiosys::init(&code).from_bindgen()
 }
+
+/// POC sample adding
+pub fn add_sound(name: String, url: String) {
+    wit::audiosys::add_sound(&name, &url).from_bindgen();
+}

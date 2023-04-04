@@ -1,6 +1,7 @@
 use crate::shared::{self, wit};
 use ambient_ecs::{query, EntityId, FnSystem, SystemGroup, World};
 use ambient_network::server::{ForkingEvent, ShutdownEvent};
+use anyhow::Ok;
 use std::sync::Arc;
 
 mod implementation;
@@ -83,12 +84,35 @@ impl shared::bindings::BindingsBound for Bindings {
     }
 }
 
+
 impl wit::audiosys::Host for Bindings {
     fn init(&mut self, code: String) -> anyhow::Result<u32> {
         unsafe {
             self.world_ref.world_mut().modify_code(code);
         }
-        Ok(49)
+        Ok(42)
+    }
+    fn add_sound(&mut self, name: String, url: String) -> anyhow::Result<()>{
+        unsafe {
+            self.world_ref.world_mut().add_sound(name, url);
+        }
+
+        // url http://10.0.0.2:8999/content/assets/ping.ogg"
+        // println!("url {}", &url);
+        // let track = Track::from_vorbis(
+        //     std::fs::read(&url)
+        //         .unwrap()
+        //         .to_vec(),
+        // ).unwrap();
+
+        // let stream = AudioStream::new().unwrap();
+        // let source = track.decode();
+        // eprintln!("Duration: {:?}", source.duration());
+        // let sound = stream.mixer().play(source);
+        // let now = Instant::now();
+        // sound.wait_blocking();
+        // eprintln!("Elapsed: {:?}", now.elapsed());
+        Ok(())
     }
 }
 

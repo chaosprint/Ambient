@@ -38,6 +38,22 @@ pub fn initialize(world: &mut World) -> anyhow::Result<()> {
         log::log!(level, "[{name}] {prefix}: {}", message.strip_suffix('\n').unwrap_or(message));
     });
 
+    // url http://10.0.0.2:8999/content/assets/ping.ogg"
+    // println!("url {}", &url);
+    // let track = Track::from_vorbis(
+    //     std::fs::read(&url)
+    //         .unwrap()
+    //         .to_vec(),
+    // ).unwrap();
+
+    // let stream = AudioStream::new().unwrap();
+    // let source = track.decode();
+    // eprintln!("Duration: {:?}", source.duration());
+    // let sound = stream.mixer().play(source);
+    // let now = Instant::now();
+    // sound.wait_blocking();
+    // eprintln!("Elapsed: {:?}", now.elapsed());
+
     // let host = cpal::default_host();
     // let device = host.default_output_device().expect("failed to find output device");
     // let config = device.default_output_config().unwrap();
