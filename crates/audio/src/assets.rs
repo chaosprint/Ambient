@@ -12,6 +12,7 @@ use crate::{
     vorbis::VorbisTrack,
     Error,
 };
+
 #[derive(Debug, Clone, Hash, PartialEq, Eq)]
 pub struct AudioFromUrl {
     pub url: AbsAssetUrl,

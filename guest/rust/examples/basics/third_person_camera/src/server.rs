@@ -21,6 +21,7 @@ use components::{player_camera_ref, player_mouse_delta_x, player_movement_direct
 
 #[main]
 pub fn main() {
+    println!("{}", audiosys::init("[update]o: sin 440".to_string()));
     Entity::new()
         .with_merge(make_transformable())
         .with_default(quad())
@@ -92,6 +93,8 @@ pub fn main() {
 
             let pos = entity::get_component(player_id, translation()).unwrap();
             let forward = rot * Vec3::X;
+            // println!("forward, {}", forward.x);
+            audiosys::init(format!("[update]o: sin {:.2}", 440.0 + forward.x * 200.0));
             entity::set_component(camera_id, lookat_center(), pos);
             entity::set_component(camera_id, translation(), pos - forward * 4. + Vec3::Z * 2.);
         }

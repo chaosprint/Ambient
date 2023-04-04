@@ -25,6 +25,7 @@ pub trait BindingsBound:
     + wit::server_message::Host
     + wit::server_physics::Host
     + wit::server_asset::Host
+    + wit::audiosys::Host
     + Clone
     + Sync
     + Send

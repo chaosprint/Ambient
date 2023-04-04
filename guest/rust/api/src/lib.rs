@@ -10,6 +10,10 @@
 
 /// Asset-related functionality, including retrieval of assets and where to find them.
 pub mod asset;
+
+/// Audio-related functionality, including playing sounds and music.
+// pub mod audiotest;
+
 /// ECS-related functionality not directly related to entities.
 pub mod ecs;
 /// Entity-related functionality, including manipulation, creation, removal, and search.
@@ -26,6 +30,9 @@ pub mod player;
 /// Physics-related functionality, including applying forces, changing physical properties, and more.
 #[cfg(feature = "server")]
 pub mod physics;
+
+/// Audio system, converting code to audio messages
+pub mod audiosys;
 
 /// Helpful imports that almost all Ambient projects will use.
 pub mod prelude;

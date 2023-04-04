@@ -83,6 +83,15 @@ impl shared::bindings::BindingsBound for Bindings {
     }
 }
 
+impl wit::audiosys::Host for Bindings {
+    fn init(&mut self, code: String) -> anyhow::Result<u32> {
+        unsafe {
+            self.world_ref.world_mut().modify_code(code);
+        }
+        Ok(49)
+    }
+}
+
 impl wit::types::Host for Bindings {}
 impl wit::entity::Host for Bindings {
     fn spawn(&mut self, data: wit::entity::EntityData) -> anyhow::Result<wit::types::EntityId> {

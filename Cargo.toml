@@ -9,6 +9,8 @@ version = "0.2.0-dev"
 rust-version = "1.67"
 
 [workspace.dependencies]
+cpal = "0.15.2"
+glicol = "0.13.2"
 aho-corasick = "0.7.20"
 profiling = { version = "1.0.7", features = [
     "profile-with-puffin",

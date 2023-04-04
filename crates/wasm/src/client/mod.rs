@@ -158,6 +158,16 @@ impl wit::entity::Host for Bindings {
         shared::implementation::entity::get_all(self.world_mut(), index)
     }
 }
+
+impl wit::audiosys::Host for Bindings {
+    fn init(&mut self, code: String) -> anyhow::Result<u32> {
+        unsafe {
+            self.world_ref.world_mut().modify_code(code);
+        }
+        Ok(49)
+    }
+}
+
 impl wit::component::Host for Bindings {
     fn get_index(&mut self, id: String) -> anyhow::Result<Option<u32>> {
         shared::implementation::component::get_index(id)

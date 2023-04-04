@@ -11,3 +11,5 @@ pub use rand::prelude::*;
 
 #[cfg(feature = "server")]
 pub use crate::physics;
+
+pub use crate::audiosys;

@@ -56,6 +56,7 @@ pub use query::*;
 pub use serialization::*;
 pub use stream::*;
 
+
 pub struct DebugWorldArchetypes<'a> {
     world: &'a World,
 }
@@ -104,6 +105,8 @@ components!("ecs", {
     world_events: WorldEvents,
 });
 
+
+
 #[derive(Clone)]
 pub struct World {
     name: &'static str,
@@ -115,6 +118,8 @@ pub struct World {
     /// Used for reset_events. Prevents change events in queries when you use reset_events
     ignore_query_inits: bool,
     query_ticker: CloneableAtomicU64,
+    code: std::sync::Arc<std::sync::Mutex<String>>,
+    // engine: Engine<128>,
 }
 impl World {
     pub fn new(name: &'static str) -> Self {
@@ -124,6 +129,8 @@ impl World {
         Self::new_with_config_internal(name, resources)
     }
     fn new_with_config_internal(name: &'static str, resources: bool) -> Self {
+
+
         let mut world = Self {
             name,
             archetypes: Vec::new(),
@@ -133,12 +140,23 @@ impl World {
             shape_change_events: None,
             ignore_query_inits: false,
             query_ticker: CloneableAtomicU64::new(0),
+            code: std::sync::Arc::new(std::sync::Mutex::new(String::new())),
         };
         if resources {
             world.spawn_with_id(EntityId::resources(), Entity::new());
         }
         world
     }
+
+    pub fn set_code(&mut self, code: std::sync::Arc<std::sync::Mutex<String>>) {
+        self.code = code;
+    }
+
+    pub fn modify_code(&mut self, new_code: String) {
+        let mut code = self.code.lock().unwrap();
+        *code = new_code;
+    }
+
     /// Clones all entities specified in the source world and returns a new world with them
     pub fn from_entities(world: &World, entities: impl IntoIterator<Item = EntityId>, serializable_only: bool) -> Self {
         let mut res = World::new_with_config("from_entities", false);

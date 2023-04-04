@@ -1,6 +1,7 @@
 world bindings {
     import types: pkg.types
 
+    import audiosys: pkg.audiosys
     import component: pkg.component
     import entity: pkg.entity
     import event: pkg.event

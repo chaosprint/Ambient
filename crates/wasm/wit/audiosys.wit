@@ -1,0 +1,3 @@
+default interface audiosys {
+    init: func(code: string) -> u32
+}

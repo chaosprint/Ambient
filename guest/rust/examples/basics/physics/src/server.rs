@@ -18,6 +18,14 @@ use ambient_api::{
 
 #[main]
 pub async fn main() {
+
+    // can do this for both client or server
+    // let audiosys = audio_sys::init().await; // without this, no audio
+    // audiosys.add_sound("assets/bonk.wav", "bonk").unwarp().await;
+    // audiosys.add_sound("assets/bgm.wav", "bgm").unwarp().await;
+
+    println!("{}", audiosys::init());
+
     Entity::new()
         .with_merge(make_perspective_infinite_reverse_camera())
         .with(aspect_ratio_from_window(), EntityId::resources())
@@ -47,8 +55,22 @@ pub async fn main() {
         .with(prefab_from_url(), asset::url("assets/Shape.glb").unwrap())
         .spawn();
 
+    on(event::FRAME, |_| {
+        // audiosys.set_distance();
+        // audiosys.set_angle();
+    });
+
     on(event::COLLISION, |c| {
-        // TODO: play a sound instead
+
+        // psedo code
+        // if bonksound.lock().is_playing() {
+            // bonksound.lock().fade_out(std::time::Duration::from_secs(0.1));
+        // }
+        // bonksound.lock() = audiosys.get_sound("bonk").unwrap().volumn(0.5).space().play();
+        // audiosys.run_script("o: sin 440");
+        // sound::clip("bonk").play(); // -> play in client.wasm -> msg to client.rs.runtime -> clap/audioworklet
+        // sound::script("o: sin 440").play().stop_after(std::time::Duration::from_secs(4.0));
+        // entity::get_component(cube, sound()).unwrap().distance(30.).volumn(0.1/*TODO: calculate this*/).play();
         println!("Bonk! {:?} collided", c.get(ids()).unwrap());
     });
 
