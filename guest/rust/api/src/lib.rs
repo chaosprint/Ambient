@@ -23,6 +23,9 @@ pub mod message;
 /// Player-related functionality.
 pub mod player;
 
+/// audio
+pub mod audiosys;
+
 /// Physics-related functionality, including applying forces, changing physical properties, and more.
 #[cfg(feature = "server")]
 pub mod physics;

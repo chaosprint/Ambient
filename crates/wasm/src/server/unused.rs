@@ -2,6 +2,22 @@ use crate::shared::{implementation::unsupported, wit};
 
 use super::Bindings;
 
+impl wit::client_audiosys::Host for Bindings {
+    fn add_sound(
+        &mut self,
+        _name: String,
+        _url: String,
+    ) -> anyhow::Result<()> {
+        unsupported()
+    }
+    fn get_sound(
+        &mut self,
+        _name: String
+    ) -> anyhow::Result<()> {
+        unsupported()
+    }
+}
+
 impl wit::client_message::Host for Bindings {
     fn send(
         &mut self,

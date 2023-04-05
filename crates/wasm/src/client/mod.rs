@@ -6,6 +6,13 @@ use ambient_std::{
 };
 use std::sync::Arc;
 
+use ambient_audio::{AudioFromUrl, AudioStream, Source};
+
+use ambient_std::{
+    asset_cache::{AsyncAssetKey},
+    asset_url::{AssetType, GetAssetType},
+};
+
 mod conversion;
 mod implementation;
 mod network;
@@ -97,6 +104,48 @@ impl shared::bindings::BindingsBound for Bindings {
         unsafe {
             self.world_ref.clear_world();
         }
+    }
+}
+
+impl wit::client_audiosys::Host for Bindings {
+    fn add_sound(&mut self, name: String, url: String) -> anyhow::Result<()> {
+        // self.world_mut().resource(audio_lib()).add_sound(name, url);
+        let asset = self.world().resource(asset_cache()).clone();
+        let async_run = self.world().resource(async_run()).clone();
+        self.world().resource(runtime()).spawn(async move {
+            let audio_url = AudioFromUrl { url: AbsAssetUrl::parse(url).unwrap() };
+            let track = audio_url.load(asset).await.unwrap();
+            // let stream = AudioStream::new().unwrap();
+            let source = track.decode();
+            eprintln!("Duration: {:?}", source.duration());
+            // match BytesFromUrl::new(AbsAssetUrl::parse(url).unwrap(), true)
+            //     .get(&asset)
+            //     .await
+            // {
+            //     Err(err) => {
+            //         log::warn!("Failed to load sound from url: {:?}", err);
+            //     }
+            //     Ok(bytes) => {
+            //         async_run.run(move |world| {
+
+                        // world
+                        //     .add_component(
+                        //         self.id,
+                        //         wit::client_audiosys::sound(),
+                        //         wit::client_audiosys::Sound {
+                        //             name,
+                        //             data: bytes.to_vec(),
+                        //         },
+                        //     )
+                        //     .ok();
+                    // });
+                // }
+            // }
+        });
+        Ok(())
+    }
+    fn get_sound(&mut self, name: String) -> anyhow::Result<()> {
+        Ok(())
     }
 }
 

@@ -1,0 +1,4 @@
+default interface client-audiosys {
+    add-sound: func(name: string, url: string)
+    get-sound: func(name: string)
+}

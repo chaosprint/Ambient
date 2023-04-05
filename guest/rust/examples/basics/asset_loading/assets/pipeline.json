@@ -6,5 +6,10 @@
             "asset_loading::is_the_best": false
           }
         }
+    },
+    {
+        "pipeline": {
+          "type": "Audio"
+        }
     }
 ]
