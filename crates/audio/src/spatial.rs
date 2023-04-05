@@ -18,7 +18,7 @@ pub(crate) const MAX_SPEED: f32 = 5.0;
 /// radians/block
 pub(crate) const MAX_ANGULAR_SPEED: f32 = 0.5;
 
-#[derive(Copy, Debug, Clone, serde::Serialize, serde::Deserialize, ambient_ui::ElementEditor)]
+#[derive(Copy, Debug, Clone, serde::Serialize, serde::Deserialize)] // ambient_ui::ElementEditor
 pub struct AudioEmitter {
     pub amplitude: f32,
     pub pos: Vec3,
@@ -67,16 +67,16 @@ impl AudioListener {
 ///
 /// See:
 /// https://www.desmos.com/calculator/mpbzwayz5f
-#[derive(Serialize, Deserialize, Debug, Clone, Copy, ambient_ui::ElementEditor)]
+#[derive(Serialize, Deserialize, Debug, Clone, Copy)] // , ambient_ui::ElementEditor
 pub enum Attenuation {
     /// 1/(ax^2)
-    #[editor("Inverse polynomial 1 / ({a}*x^2 + {b}*x + {c}")]
+    // #[editor("Inverse polynomial 1 / ({a}*x^2 + {b}*x + {c}")]
     InverseQuadratic(f32),
     /// e^(-ax)
-    #[editor(slider, min = -10.0, max = 10.0)]
+    // #[editor(slider, min = -10.0, max = 10.0)]
     Exponential(f32),
     /// e^(-(density*x)^gradient)
-    #[editor(slider, min = -10.0, max = 10.0)]
+    // #[editor(slider, min = -10.0, max = 10.0)]
     Smoothstep { density: f32, gradient: f32 },
     /// 1 / (1 + lin*x + quad*x^2)
     /// Increasing lin leads to a sharper falloff, while increasing `quad` leads to a bell shaped

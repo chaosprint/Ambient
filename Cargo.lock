@@ -304,7 +304,6 @@ version = "0.2.0-dev"
 dependencies = [
  "ambient_std",
  "ambient_sys",
- "ambient_ui",
  "approx",
  "async-trait",
  "byteorder",
@@ -490,6 +489,7 @@ dependencies = [
 name = "ambient_ecs"
 version = "0.2.0-dev"
 dependencies = [
+ "ambient_audio",
  "ambient_shared_types",
  "ambient_std",
  "anyhow",

@@ -115,6 +115,8 @@ pub struct World {
     /// Used for reset_events. Prevents change events in queries when you use reset_events
     ignore_query_inits: bool,
     query_ticker: CloneableAtomicU64,
+    pub audio_stream: std::sync::Arc<ambient_audio::AudioStream>,
+    pub soundlib: std::collections::HashMap<String, ambient_audio::track::TrackDecodeStream>,
 }
 impl World {
     pub fn new(name: &'static str) -> Self {
@@ -133,6 +135,8 @@ impl World {
             shape_change_events: None,
             ignore_query_inits: false,
             query_ticker: CloneableAtomicU64::new(0),
+            audio_stream: std::sync::Arc::new(ambient_audio::AudioStream::new().unwrap()),
+            soundlib: std::collections::HashMap::new(),
         };
         if resources {
             world.spawn_with_id(EntityId::resources(), Entity::new());

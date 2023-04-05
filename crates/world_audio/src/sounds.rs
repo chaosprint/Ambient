@@ -29,36 +29,36 @@ components!("audio", {
 #[derive(Serialize, Deserialize, Debug, Clone, Copy, DerefMut, Deref, From, Into)]
 pub struct AttenuationEditorVisual(Attenuation);
 
-impl Editor for AttenuationEditorVisual {
-    fn editor(self, on_change: Cb<dyn Fn(Self) + Sync + Send>, opts: ambient_ui::EditorOpts) -> ambient_element::Element {
-        let editor = Attenuation::editor(*self, cb(move |v| on_change(v.into())), opts);
+// impl Editor for AttenuationEditorVisual {
+//     fn editor(self, on_change: Cb<dyn Fn(Self) + Sync + Send>, opts: ambient_ui::EditorOpts) -> ambient_element::Element {
+//         let editor = Attenuation::editor(*self, cb(move |v| on_change(v.into())), opts);
 
-        let x_max = self.inverse(0.01);
+//         let x_max = self.inverse(0.01);
 
-        const STEPS: u32 = 32;
+//         const STEPS: u32 = 32;
 
-        let points = (0..STEPS)
-            .map(|v| {
-                let x = (v as f32 / (STEPS - 1) as f32) * x_max;
+//         let points = (0..STEPS)
+//             .map(|v| {
+//                 let x = (v as f32 / (STEPS - 1) as f32) * x_max;
 
-                let y = self.attenuate(x).clamp(0.0, 2.0);
+//                 let y = self.attenuate(x).clamp(0.0, 2.0);
 
-                vec2(x, y)
-            })
-            .collect_vec();
+//                 vec2(x, y)
+//             })
+//             .collect_vec();
 
-        let graph = Graph {
-            points,
-            style: GraphStyle { color: vec4(0.0, 0.0, 1.0, 1.0), ..Default::default() },
-            width: 400.0,
-            height: 200.0,
-            ..Default::default()
-        }
-        .el();
+//         let graph = Graph {
+//             points,
+//             style: GraphStyle { color: vec4(0.0, 0.0, 1.0, 1.0), ..Default::default() },
+//             width: 400.0,
+//             height: 200.0,
+//             ..Default::default()
+//         }
+//         .el();
 
-        FlowColumn::el([editor, graph])
-    }
-}
+//         FlowColumn::el([editor, graph])
+//     }
+// }
 
 fn get_audio_listener(world: &World) -> anyhow::Result<&Arc<Mutex<AudioListener>>> {
     let (_, listener) = query(audio_listener())
