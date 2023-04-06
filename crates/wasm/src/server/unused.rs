@@ -10,7 +10,7 @@ impl wit::client_audiosys::Host for Bindings {
     ) -> anyhow::Result<()> {
         unsupported()
     }
-    fn get_sound(
+    fn play_sound(
         &mut self,
         _name: String
     ) -> anyhow::Result<()> {

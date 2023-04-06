@@ -115,7 +115,7 @@ pub struct World {
     /// Used for reset_events. Prevents change events in queries when you use reset_events
     ignore_query_inits: bool,
     query_ticker: CloneableAtomicU64,
-    pub audio_stream: std::sync::Arc<ambient_audio::AudioStream>,
+    pub audio_stream: Option<std::sync::Arc<ambient_audio::AudioStream>>,
     pub soundlib: std::collections::HashMap<String, ambient_audio::track::TrackDecodeStream>,
 }
 impl World {
@@ -126,6 +126,10 @@ impl World {
         Self::new_with_config_internal(name, resources)
     }
     fn new_with_config_internal(name: &'static str, resources: bool) -> Self {
+        let mut audio_stream = None;
+        if name == "client_game_world" {
+            audio_stream = Some(std::sync::Arc::new(ambient_audio::AudioStream::new().unwrap()));
+        }
         let mut world = Self {
             name,
             archetypes: Vec::new(),
@@ -135,7 +139,7 @@ impl World {
             shape_change_events: None,
             ignore_query_inits: false,
             query_ticker: CloneableAtomicU64::new(0),
-            audio_stream: std::sync::Arc::new(ambient_audio::AudioStream::new().unwrap()),
+            audio_stream,
             soundlib: std::collections::HashMap::new(),
         };
         if resources {

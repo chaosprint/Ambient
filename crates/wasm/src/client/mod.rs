@@ -6,7 +6,7 @@ use ambient_std::{
 };
 use std::sync::Arc;
 
-use ambient_audio::{AudioFromUrl, AudioStream, Source};
+use ambient_audio::{AudioFromUrl, AudioStream, Source, SoundPlayer};
 
 use ambient_std::{
     asset_cache::{AsyncAssetKey},
@@ -121,22 +121,9 @@ impl wit::client_audiosys::Host for Bindings {
         });
         Ok(())
     }
-    fn get_sound(&mut self, name: String) -> anyhow::Result<()> {
+    fn play_sound(&mut self, name: String) -> anyhow::Result<()> {
         let source = self.world().soundlib.get(&name).unwrap();
-        let audio_stream_ref = Arc::clone(&self.world().audio_stream);
-        let sound = (*audio_stream_ref).mixer().play((*source).clone());
-        // sound.wait_blocking();
-        // let asset = self.world().resource(asset_cache()).clone();
-        // let async_run = self.world().resource(async_run()).clone();
-        // self.world().resource(runtime()).spawn(async move {
-        //     async_run.run(move |world| {
-        //         let source = world.soundlib.get(&name).unwrap();
-        //         let audio_stream_ref = Arc::clone(&world.audio_stream);
-        //         let sound = (*audio_stream_ref).mixer().play((*source).clone());
-        //         sound.wait_blocking();
-        //     });
-
-        // });
+        let _ = &self.world().audio_stream.as_ref().unwrap().mixer().play(source.clone());
         Ok(())
     }
 }

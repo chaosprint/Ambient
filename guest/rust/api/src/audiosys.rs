@@ -6,6 +6,6 @@ pub fn add_sound(name: String, path: String) {
 }
 
 /// Get sound from the world
-pub fn get_sound(name: String) {
-    wit::client_audiosys::get_sound(&name)
+pub fn play_sound(name: String) {
+    wit::client_audiosys::play_sound(&name)
 }

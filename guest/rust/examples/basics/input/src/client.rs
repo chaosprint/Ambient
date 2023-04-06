@@ -6,8 +6,11 @@ pub fn main() {
         let (delta, _) = player::get_raw_input_delta();
 
         audiosys::add_sound("test".to_string(), asset::url("assets/ping.ogg").unwrap());
+
         if !delta.keys.is_empty() {
-            audiosys::get_sound("test".to_string());
+
+            audiosys::play_sound("test".to_string());
+
             println!("Pressed the keys {:?}", delta.keys);
         }
         // if !delta.keys_released.is_empty() {
