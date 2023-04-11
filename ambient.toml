@@ -9,6 +9,10 @@ version = "0.2.0-dev"
 name = "Core"
 description = "Contains all core components for the Ambient runtime."
 
+[components."core::audio"]
+name = "Audio"
+description = "World audio emmitters and listeners."
+
 [components."core::app"]
 name = "App"
 description = "High-level state relevant to the application (including the in-development Editor)."
@@ -76,6 +80,16 @@ description = "Text rendering."
 [components."core::wasm"]
 name = "WASM"
 description = "Internal implementation details of WASM integration."
+
+[components."core::audio::audio_emitter"]
+name = "Audio emitter"
+description = "An audio emitter that plays a sound at a given position."
+attributes = ["Resource"]
+
+[components."core::audio::audio_listener"]
+name = "Audio listener"
+description = "An audio listener that listens to audio emitters."
+attributes = ["Resource"]
 
 [components."core::app::cursor_position"]
 type = "Vec2"

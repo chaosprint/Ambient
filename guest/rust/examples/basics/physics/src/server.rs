@@ -10,6 +10,7 @@ use ambient_api::{
         primitives::cube,
         rendering::{cast_shadows, color},
         transform::{lookat_center, rotation, scale, translation},
+        audio::audio_emitter,
     },
     concepts::{make_perspective_infinite_reverse_camera, make_transformable},
     prelude::*,

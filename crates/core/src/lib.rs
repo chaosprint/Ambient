@@ -12,6 +12,7 @@ use ambient_std::asset_cache::{AssetCache, SyncAssetKey};
 pub use paste;
 use serde::{Deserialize, Serialize};
 
+pub mod audio;
 pub mod async_ecs;
 pub mod bounding;
 pub mod camera;
@@ -20,6 +21,7 @@ pub mod hierarchy;
 pub mod player;
 pub mod transform;
 pub mod window;
+
 
 pub use ambient_ecs::generated::components::core::app::{
     description, dtime, main_scene, map_seed, name, project_name, selectable, snap_to_ground, tags, ui_scene,
