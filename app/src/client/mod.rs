@@ -20,6 +20,11 @@ use crate::{cli::RunCli, shared};
 use ambient_ecs_editor::ECSEditor;
 use ambient_layout::{docking, padding, width, Borders};
 
+// use ambient_world_audio
+
+use ambient_audio::{AudioStream};
+use ambient_world_audio::{systems::setup_audio}; //audio_emitter, audio_listener, play_sound_on_entity,
+
 pub mod player;
 mod wasm;
 
@@ -30,12 +35,16 @@ pub async fn run(assets: AssetCache, server_addr: SocketAddr, run: &RunCli, proj
 
     let is_debug = std::env::var("AMBIENT_DEBUGGER").is_ok() || run.debugger;
 
+    let stream = AudioStream::new().unwrap();
+
     AppBuilder::new()
         .ui_renderer(true)
         .with_asset_cache(assets)
         .headless(headless)
         .update_title_with_fps_stats(false)
         .run(move |app, _runtime| {
+            setup_audio(&mut app.world, stream.mixer().clone()).unwrap();
+            app.systems.add(Box::new(ambient_world_audio::systems::spatial_audio_systems()));
             *app.world.resource_mut(window_title()) = "Ambient".to_string();
             MainApp { server_addr, user_id, show_debug: is_debug, golden_image_test: run.golden_image_test, project_path }
                 .el()
