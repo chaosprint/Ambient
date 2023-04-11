@@ -149,8 +149,8 @@ impl wit::asset::Host for Bindings {
 }
 
 impl wit::audio::Host for Bindings {
-    fn spawn_on_world(&mut self) -> anyhow::Result<()> {
-        shared::implementation::audio::spawn_on_world(self.world_mut())
+    fn spawn_on_world(&mut self, path: String) -> anyhow::Result<()> {
+        shared::implementation::audio::spawn_emitters(self.world_mut(), path)
     }
 }
 
