@@ -9,6 +9,7 @@ world bindings {
     import client-player: pkg.client-player
 
     import server-physics: pkg.server-physics
+    import audio: pkg.audio
     import asset: pkg.asset
     import server-message: pkg.server-message
 

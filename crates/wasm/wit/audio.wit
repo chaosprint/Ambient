@@ -1,0 +1,3 @@
+default interface asset {
+    spawn-on-world: func()
+}

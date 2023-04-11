@@ -148,6 +148,13 @@ impl wit::asset::Host for Bindings {
     }
 }
 
+impl wit::audio::Host for Bindings {
+    fn spawn_on_world(&mut self) -> anyhow::Result<()> {
+        shared::implementation::audio::spawn_on_world(self.world_mut())
+    }
+}
+
+
 impl wit::component::Host for Bindings {
     fn get_index(&mut self, id: String) -> anyhow::Result<Option<u32>> {
         shared::implementation::component::get_index(id)

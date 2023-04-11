@@ -1434,6 +1434,7 @@ dependencies = [
  "ambient_sys",
  "ambient_wasmtime_wasi",
  "ambient_window_types",
+ "ambient_world_audio",
  "anyhow",
  "async-trait",
  "byteorder",
