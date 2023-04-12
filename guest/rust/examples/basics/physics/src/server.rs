@@ -17,7 +17,7 @@ use ambient_api::{
 
 #[main]
 pub async fn main() {
-    Entity::new()
+    let cam = Entity::new()
         .with_merge(make_perspective_infinite_reverse_camera())
         .with(aspect_ratio_from_window(), EntityId::resources())
         .with_default(main_scene())
@@ -40,6 +40,31 @@ pub async fn main() {
         .with(scale(), vec3(0.5, 0.5, 0.5))
         .with(color(), Vec4::ONE)
         .spawn();
+
+    let bonk = audio::load(
+        Sound {
+            url: asset::url("assets/bonk.wav").unwrap(),
+            looping: false,
+            ..Default::default()
+        }
+    );
+
+    // audio::set_emitter(
+    //     cube,
+    //     AudioEmitter {
+    //         amplitude: 5.0,
+    //         attenuation: Attenuation::InversePoly { quad: 0.1, lin: 0.0, constant: 1.0 },
+    //         pos: entity::get_component(plate, translation()).unwrap(),
+    //     };
+    // );
+
+    // audio::set_listener(
+    //     cam,
+    //     AudioListener::new(Mat4::IDENTITY, Vec3::X * 0.3)
+    // );
+
+    // when hit, play a sound
+    // entity::play_sound(plate, bonk);
 
     Entity::new()
         .with_merge(make_transformable())

@@ -1,8 +1,12 @@
-{
-  "pipeline": {
-    "type": "Models",
-    "collider": {
-      "type": "FromModel"
+[{
+    "pipeline": {
+      "type": "Models",
+      "collider": {
+        "type": "FromModel"
+      }
     }
-  }
-}
+  }, {
+      "pipeline": {
+          "type": "Audio"
+      }
+  }]

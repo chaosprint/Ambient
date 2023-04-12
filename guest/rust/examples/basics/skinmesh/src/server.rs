@@ -14,7 +14,10 @@ use ambient_api::{
 
 #[main]
 pub fn main() {
-    Entity::new()
+
+    audio::add_sound(bonk(), asset::url("assets/bonk.wav").unwrap());
+
+    let cam = Entity::new()
         .with_merge(make_perspective_infinite_reverse_camera())
         .with(aspect_ratio_from_window(), EntityId::resources())
         .with_default(main_scene())
@@ -22,7 +25,7 @@ pub fn main() {
         .with(lookat_center(), vec3(0., 0., 1.))
         .spawn();
 
-    Entity::new()
+    let plate = Entity::new()
         .with_merge(make_transformable())
         .with_default(quad())
         .with(scale(), Vec3::ONE * 10.)

@@ -1,0 +1,11 @@
+default interface audio {
+    /// sound
+    record sound {
+        /// The sound clip URL to play.
+        url: string,
+        /// Whether or not this action should loop
+        looping: bool,
+    }
+
+    load: func(sound: sound)
+}
