@@ -16,6 +16,9 @@ use parking_lot::Mutex;
 use serde::{Deserialize, Serialize};
 
 components!("audio", {
+
+    @[Resource]
+    audio_tracks: Vec<std::sync::Arc<ambient_audio::track::TrackDecodeStream>>,
     @[Resource]
     hrtf_lib: Arc<HrtfLib>,
     audio_emitter: Arc<Mutex<AudioEmitter>>,

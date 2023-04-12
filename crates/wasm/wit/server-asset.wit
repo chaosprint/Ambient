@@ -1,3 +1,0 @@
-default interface server-asset {
-    url: func(path: string) -> option<string>
-}

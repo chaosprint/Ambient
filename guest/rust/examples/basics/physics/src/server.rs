@@ -11,6 +11,7 @@ use ambient_api::{
         rendering::{cast_shadows, color},
         transform::{lookat_center, rotation, scale, translation},
     },
+    audio::{AudioListener},
     concepts::{make_perspective_infinite_reverse_camera, make_transformable},
     prelude::*,
 };
@@ -41,13 +42,12 @@ pub async fn main() {
         .with(color(), Vec4::ONE)
         .spawn();
 
-    let bonk = audio::load(
-        Sound {
-            url: asset::url("assets/bonk.wav").unwrap(),
-            looping: false,
-            ..Default::default()
-        }
-    );
+    // let bonk = AudioTrack {
+    //     url: asset::url("assets/bonk.ogg").unwrap(),
+    //     looping: false,
+    // };
+
+    audio::load(asset::url("assets/bonk.ogg").unwrap());
 
     // audio::set_emitter(
     //     cube,
@@ -58,13 +58,13 @@ pub async fn main() {
     //     };
     // );
 
-    // audio::set_listener(
-    //     cam,
-    //     AudioListener::new(Mat4::IDENTITY, Vec3::X * 0.3)
-    // );
+    audio::set_listener(
+        cam,
+        AudioListener::new(Mat4::IDENTITY, Vec3::X * 0.3)
+    );
 
     // when hit, play a sound
-    // entity::play_sound(plate, bonk);
+    // entity::play_sound(cube, bonk);
 
     Entity::new()
         .with_merge(make_transformable())
@@ -73,13 +73,14 @@ pub async fn main() {
 
     ambient_api::messages::Collision::subscribe(|msg| {
         // TODO: play a sound instead
+        audio::play(0);
         println!("Bonk! {:?} collided", msg.ids);
     });
 
     ambient_api::messages::Frame::subscribe(move |_| {
         for hit in physics::raycast(Vec3::Z * 20., -Vec3::Z) {
             if hit.entity == cube {
-                println!("The raycast hit the cube: {hit:?}");
+                // println!("The raycast hit the cube: {hit:?}");
             }
         }
     });

@@ -26,6 +26,7 @@ impl AsyncAssetKey<Result<Arc<Track>, Arc<Error>>> for AudioFromUrl {
     where
         Self: 'async_trait,
     {
+        println!("Loading sound: {:?}", self.url);
         let format = match self.url.extension().as_ref().map(|x| x as &str) {
             Some("wav") => AudioFormat::Wav,
             Some("ogg") => AudioFormat::Vorbis,

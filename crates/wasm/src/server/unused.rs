@@ -21,3 +21,12 @@ impl wit::client_player::Host for Bindings {
         unsupported()
     }
 }
+
+// impl wit::audio::Host for Bindings {
+//     fn load(&mut self, url: String) -> anyhow::Result<()> {
+//         unsupported()
+//     }
+//     fn play(&mut self, index: u32) -> anyhow::Result<()> {
+//         unsupported()
+//     }
+// }

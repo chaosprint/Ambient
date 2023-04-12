@@ -1,11 +1,12 @@
 default interface audio {
-    /// sound
-    record sound {
-        /// The sound clip URL to play.
-        url: string,
-        /// Whether or not this action should loop
-        looping: bool,
+use pkg.types.{entity-id, mat4, vec3}
+    /// An action in an animation.
+    record audio-listener {
+        transform: mat4,
+        ear-distance: vec3,
     }
 
-    load: func(sound: sound)
+    load: func(url: string)
+    play: func(index: u32)
+    set-listener: func(entity: entity-id, listener: audio-listener)
 }

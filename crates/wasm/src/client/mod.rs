@@ -166,8 +166,14 @@ impl wit::asset::Host for Bindings {
 }
 
 impl wit::audio::Host for Bindings {
-    fn load(&mut self, sound: wit::audio::Sound) -> anyhow::Result<()> {
-        shared::implementation::audio::load(self.world_mut(), sound)
+    fn load(&mut self, url: String) -> anyhow::Result<()> {
+        shared::implementation::audio::load(self.world_mut(), url)
+    }
+    fn play(&mut self, index: u32) -> anyhow::Result<()> {
+        shared::implementation::audio::play(self.world_mut(), index)
+    }
+    fn set_listener(&mut self, entity: wit::types::EntityId, listener: wit::audio::AudioListener) -> anyhow::Result<()> {
+        shared::implementation::audio::set_listener(self.world_mut(), entity, listener)
     }
 }
 

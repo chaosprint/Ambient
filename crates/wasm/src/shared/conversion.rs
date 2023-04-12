@@ -1,6 +1,7 @@
 use ambient_sys::time::SystemTime;
 
 use ambient_animation as animation;
+use ambient_audio::{AudioListener};
 use ambient_ecs::EntityId;
 use ambient_std::asset_url::TypedAssetUrl;
 use glam::{Mat4, Quat, UVec2, UVec3, UVec4, Vec2, Vec3, Vec4};
@@ -284,6 +285,17 @@ impl FromBindgen for wit::entity::AnimationController {
         animation::AnimationController {
             actions: self.actions.into_iter().map(|s| s.from_bindgen()).collect(),
             apply_base_pose: self.apply_base_pose,
+        }
+    }
+}
+
+
+impl FromBindgen for wit::audio::AudioListener {
+    type Item = AudioListener;
+    fn from_bindgen(self) -> Self::Item {
+        AudioListener {
+            transform: self.transform.from_bindgen(),
+            ear_distance: self.ear_distance.from_bindgen(),
         }
     }
 }
