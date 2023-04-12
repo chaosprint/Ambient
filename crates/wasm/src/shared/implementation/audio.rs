@@ -1,7 +1,6 @@
 use ambient_std::asset_url::{AbsAssetUrl, AssetUrl};
-use ambient_world_audio::{play_sound_on_entity, audio_listener};
-use ambient_audio::{AudioFromUrl, track::TrackDecodeStream, Source};
-use ambient_world_audio::{audio_tracks as tracks};
+use ambient_world_audio::{play_sound_on_entity, audio_tracks as tracks, audio_emitter, audio_listener, hrtf_lib};
+use ambient_audio::{AudioFromUrl, track::TrackDecodeStream, Attenuation, AudioEmitter, Source};
 use ambient_network::{server::content_base_url, ServerWorldExt};
 use ambient_core::{asset_cache, async_ecs::async_run, hierarchy::children, runtime};
 // use std::collections::HashSet;
@@ -37,63 +36,42 @@ pub(crate) fn load(world: &mut World, soundurl: String) -> anyhow::Result<()> {
     runtime.spawn(async move {
         let audio_url = AudioFromUrl { url: asset_url };
         let track = audio_url.get(&assets).await.expect("Failed to load audio");
-        let source = std::sync::Arc::new(track.decode());
-        println!("Loaded sound duration: {:?}", source.duration());
+        // let source = std::sync::Arc::new(track);
+        // println!("Loaded sound duration: {:?}", source.duration());
 
         async_run.run(move |world| {
-            world.add_resource(tracks(), vec![source]);
+            world.add_resource(tracks(), vec![track]);
         });
     });
     Ok(())
 }
 
-pub(crate) fn play(world: &mut World, index: u32) -> anyhow::Result<()> {
+pub(crate) fn play(world: &mut World, id: wit::types::EntityId, index: u32) -> anyhow::Result<()> {
     let source_vec = world.resource(tracks());
-    let source = &source_vec[index as usize];
-    println!("loaded sound: {:?}", source.duration());
+    let source = source_vec[index as usize].clone().decode();
+
+    let stream = ambient_audio::AudioStream::new().unwrap();
+    let sound = stream.mixer().play(source);
     Ok(())
 }
 
 pub(crate) fn set_listener(world: &mut World, entity: wit::types::EntityId, listener: wit::audio::AudioListener) -> anyhow::Result<()> {
     // let mut audio_listeners = world.resource_mut(audio_listeners());
-    world.set(entity.from_bindgen(), audio_listener(), Arc::new(Mutex::new(listener.from_bindgen())));
+    world.add_component(
+        entity.from_bindgen(),
+        audio_listener(),
+        Arc::new(Mutex::new(listener.from_bindgen()))
+    ).unwrap();
     Ok(())
 }
 
-// pub(crate) fn load(world: &World, audio_tracks: wit::audio::AudioTracks) -> anyhow::Result<()> {
-    // let assets = world.resource(asset_cache()).clone();
-
-    // let url = world.synced_resource(content_base_url()).unwrap();
-    // let base_url = &AbsAssetUrl::parse(url)?;
-    // let asset_url = AssetUrl::parse(sound.url)?.resolve(base_url)?;
-    // println!("Loading sound: {:?}", audio_tracks);
-    // runtime.spawn(async move {
-
-        // let audio_url = AudioFromUrl { url: asset_url };
-        // let track = unwrap_log_err!(audio_url.load(assets).await);
-        // let mut source = track.decode();
-        // println!("Loaded sound duration: {:?}", source.duration());
-        // let track = unwrap_log_err!(audio_url.load(assets).await).decode();
-        // let entity_id = world.resource_entity();
-
-        // let mut source = track.decode();
-        // let base_ent_id = obj.resource(children())[0];
-        // println!("Loaded sound base_ent_id: {:?}", obj);
-        // let obj = unwrap_log_err!(url.get(&assets).await);
-        // let base_ent_id = obj.resource(children())[0];
-
-        // TODO: This only handles prefabs with a single entity
-
-        // let entity = obj.clone_entity(base_ent_id).unwrap();
-        // async_run.run(move |world| {
-        //     world.add_component(
-        //         entity_id,
-        //         tracks(),
-        //         audio_tracks.from_bindgen(),
-                // ambient_audio::AudioTracks { tracks: tracks.into_iter().map(|x|x.from_bindgen()).collect() },
-    //         );
-    //     });
-    // });
-    // Ok(())
-
-// }
+pub(crate) fn set_emitter(world: &mut World, entity: wit::types::EntityId) -> anyhow::Result<()> {
+    let pos = glam::vec3(0.0_f32.cos() * 16.0, 0.0_f32.sin() * 16.0, 2.0);
+    let emitter = Arc::new(Mutex::new(AudioEmitter {
+        amplitude: 5.0,
+        attenuation: Attenuation::InversePoly { quad: 0.1, lin: 0.0, constant: 1.0 },
+        pos,
+    }));
+    world.add_component(entity.from_bindgen(), audio_emitter(), emitter).unwrap();
+    Ok(())
+}

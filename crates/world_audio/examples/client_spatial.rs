@@ -18,10 +18,11 @@ use glam::{vec3, vec4, Mat4, Vec3};
 use parking_lot::Mutex;
 
 fn spawn_emitters(world: &mut World) {
-    let track = Track::from_wav(std::fs::read("../../../elements/example_assets/ambience.wav").unwrap().to_vec()).unwrap();
+    let path = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../audio/assets/bonk.wav");
+    let track = Track::from_wav(std::fs::read(path).unwrap().to_vec()).unwrap();
 
     let count = 1;
-    for i in 0..count {
+    for i in 0..3 {
         let theta = (i as f32) / count as f32 * TAU;
         let pos = vec3(theta.cos() * 16.0, theta.sin() * 16.0, 2.0);
 

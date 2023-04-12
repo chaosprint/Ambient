@@ -289,7 +289,6 @@ impl FromBindgen for wit::entity::AnimationController {
     }
 }
 
-
 impl FromBindgen for wit::audio::AudioListener {
     type Item = AudioListener;
     fn from_bindgen(self) -> Self::Item {

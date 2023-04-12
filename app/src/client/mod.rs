@@ -37,6 +37,7 @@ pub async fn run(assets: AssetCache, server_addr: SocketAddr, run: &RunCli, proj
         .update_title_with_fps_stats(false)
         .run(move |app, _runtime| {
             *app.world.resource_mut(window_title()) = "Ambient".to_string();
+            // app.systems.add(Box::new(ambient_world_audio::systems::spatial_audio_systems()));
             MainApp { server_addr, user_id, show_debug: is_debug, golden_image_test: run.golden_image_test, project_path }
                 .el()
                 .spawn_interactive(&mut app.world);
@@ -273,6 +274,7 @@ fn systems() -> SystemGroup {
             Box::new(ambient_sky::systems()),
             Box::new(ambient_water::systems()),
             Box::new(ambient_physics::client_systems()),
+            Box::new(ambient_world_audio::systems::spatial_audio_systems()),
             Box::new(wasm::systems()),
             Box::new(player::systems_final()),
         ],

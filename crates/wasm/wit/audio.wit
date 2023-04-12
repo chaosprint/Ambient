@@ -1,12 +1,15 @@
 default interface audio {
 use pkg.types.{entity-id, mat4, vec3}
-    /// An action in an animation.
+    /// audio listener
     record audio-listener {
+        /// transform
         transform: mat4,
+        /// ear-distance
         ear-distance: vec3,
     }
 
     load: func(url: string)
-    play: func(index: u32)
+    play: func(entity: entity-id, index: u32)
     set-listener: func(entity: entity-id, listener: audio-listener)
+    set-emitter: func(entity: entity-id)
 }

@@ -42,46 +42,19 @@ pub async fn main() {
         .with(color(), Vec4::ONE)
         .spawn();
 
-    // let bonk = AudioTrack {
-    //     url: asset::url("assets/bonk.ogg").unwrap(),
-    //     looping: false,
-    // };
 
-    audio::load(asset::url("assets/bonk.ogg").unwrap());
-
-    // audio::set_emitter(
-    //     cube,
-    //     AudioEmitter {
-    //         amplitude: 5.0,
-    //         attenuation: Attenuation::InversePoly { quad: 0.1, lin: 0.0, constant: 1.0 },
-    //         pos: entity::get_component(plate, translation()).unwrap(),
-    //     };
-    // );
-
-    audio::set_listener(
-        cam,
-        AudioListener::new(Mat4::IDENTITY, Vec3::X * 0.3)
-    );
-
-    // when hit, play a sound
-    // entity::play_sound(cube, bonk);
-
-    Entity::new()
+    let plate = Entity::new()
         .with_merge(make_transformable())
         .with(prefab_from_url(), asset::url("assets/Shape.glb").unwrap())
         .spawn();
 
-    ambient_api::messages::Collision::subscribe(|msg| {
-        // TODO: play a sound instead
-        audio::play(0);
-        println!("Bonk! {:?} collided", msg.ids);
-    });
+    audio::set_emitter(cube);
 
     ambient_api::messages::Frame::subscribe(move |_| {
         for hit in physics::raycast(Vec3::Z * 20., -Vec3::Z) {
-            if hit.entity == cube {
+            // if hit.entity == cube {
                 // println!("The raycast hit the cube: {hit:?}");
-            }
+            // }
         }
     });
 

@@ -1,25 +1,15 @@
 use crate::{
-    global::{EntityId, Vec3},
+    global::{EntityId},
     internal::{
-        component::{Component, Entity, SupportedValue, UntypedComponent},
-        conversion::{FromBindgen, IntoBindgen},
+        // component::{Component, Entity, SupportedValue, UntypedComponent},
+        conversion::{IntoBindgen}, // FromBindgen,
         wit,
     },
-    prelude::block_until,
+    prelude::*
 };
 
+// pub use ambient_audio::AudioListener;
 pub use wit::audio::AudioListener;
-// pub use wit::entity::{AnimationAction, AnimationController};
-
-// /// load a sound, to world resources
-// pub fn load(tracks: Vec<AudioTrack>) {
-//     let audio_tracks = AudioTracks {
-//         tracks
-//     }
-//     wit::audio::load(audio_tracks);
-// }
-
-use crate::internal::wit;
 
 /// Load sound into world
 pub fn load(url: impl AsRef<str>) {
@@ -27,11 +17,19 @@ pub fn load(url: impl AsRef<str>) {
 }
 
 /// Play sound
-pub fn play(index: u32) {
-    wit::audio::play(index)
+pub fn play(entity: EntityId, index: u32) {
+    wit::audio::play(entity.into_bindgen(), index)
 }
 
 /// Set listener
-pub fn set_listener(entity: EntityId, listener: AudioListener) {
-    wit::audio::set_listener(entity, listener)
+pub fn set_listener(entity: EntityId, transform: Mat4, ear_distance: Vec3) {
+    wit::audio::set_listener(entity.into_bindgen(), AudioListener {
+        transform: transform.into_bindgen(),
+        ear_distance: ear_distance.into_bindgen(),
+    });
+}
+
+/// Set listener
+pub fn set_emitter(entity: EntityId) {
+    wit::audio::set_emitter(entity.into_bindgen());
 }

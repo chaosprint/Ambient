@@ -21,6 +21,8 @@ pub fn initialize(world: &mut World) -> anyhow::Result<()> {
         log::log!(level, "[{name}] {prefix}: {}", message.strip_suffix('\n').unwrap_or(message));
     });
 
+    // let stream = ambient_audio::AudioStream::new().unwrap();
+    // ambient_world_audio::systems::setup_audio(world, stream.mixer().clone()).unwrap();
     ambient_wasm::client::initialize(world, messenger)?;
 
     Ok(())
