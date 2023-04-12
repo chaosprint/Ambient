@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use ambient_audio::{hrtf::HrtfLib, Attenuation, AudioEmitter, AudioListener, AudioMixer, Sound, Source};
+use ambient_audio::{hrtf::HrtfLib, Attenuation, AudioEmitter, AudioListener, AudioMixer, Sound, Source, track::TrackDecodeStream};
 use ambient_ecs::{components, query, EntityId, Resource, World};
 use ambient_element::ElementComponentExt;
 use ambient_std::{cb, Cb};
@@ -20,7 +20,7 @@ components!("audio", {
     hrtf_lib: Arc<HrtfLib>,
     audio_emitter: Arc<Mutex<AudioEmitter>>,
     audio_listener: Arc<Mutex<AudioListener>>,
-
+    track: Vec<f32>,
     @[Resource]
     audio_mixer: AudioMixer,
 });

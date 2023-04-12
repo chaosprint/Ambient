@@ -1,5 +1,5 @@
 use crate::shared::{self, wit};
-use ambient_ecs::{query, EntityId, FnSystem, SystemGroup, World};
+use ambient_ecs::{query, EntityId, FnSystem, SystemGroup, World, Component};
 use ambient_network::server::{ForkingEvent, ShutdownEvent};
 use std::sync::Arc;
 
@@ -149,8 +149,18 @@ impl wit::asset::Host for Bindings {
 }
 
 impl wit::audio::Host for Bindings {
-    fn spawn_emitters(&mut self, path: String) -> anyhow::Result<()> {
-        shared::implementation::audio::spawn_emitters(self.world_mut(), path)
+    fn add_sound(&mut self, index: u32, path: String) -> anyhow::Result<()> {
+        shared::implementation::audio::add_sound(self.world_mut(), index, path)
+    }
+
+    fn play_sound_on_entity(&mut self, entity: wit::types::EntityId, path: String) -> anyhow::Result<()> {
+        shared::implementation::audio::play_sound_on_entity(self.world_mut(), entity, path)
+    }
+    fn listener(&mut self) -> anyhow::Result<()> {
+        shared::implementation::audio::listener(self.world_mut())
+    }
+    fn emitter(&mut self) -> anyhow::Result<()> {
+        shared::implementation::audio::emitter(self.world_mut())
     }
 }
 

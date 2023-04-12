@@ -2,3 +2,8 @@
 id = "physics"
 name = "Physics"
 version = "0.0.1"
+
+[components]
+bonk = { type = { type = "Vec", element_type = "F32" }, name = "Bonk sound", description = "Get the sound from world" }
+
+# bonk = { type = "Vec", element_type = "F32", name = "Bonk sound", description = "Get the sound from world" }

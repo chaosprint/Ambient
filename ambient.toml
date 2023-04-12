@@ -81,14 +81,22 @@ description = "Text rendering."
 name = "WASM"
 description = "Internal implementation details of WASM integration."
 
-[components."core::audio::audio_emitter"]
-name = "Audio emitter"
-description = "An audio emitter that plays a sound at a given position."
-attributes = ["Resource"]
+# [components."core::audio::audio_emitter"]
+# name = "Audio emitter"
+# type = "Empty"
+# description = "An audio emitter that plays a sound at a given position."
+# attributes = ["Resource"]
 
-[components."core::audio::audio_listener"]
-name = "Audio listener"
-description = "An audio listener that listens to audio emitters."
+# [components."core::audio::audio_listener"]
+# name = "Audio listener"
+# type = "Empty"
+# description = "An audio listener that listens to audio emitters."
+# attributes = ["Resource"]
+
+[components."core::audio::track"]
+name = "Tracks"
+type = { type = "Vec", element_type = "F32" }
+description = "A stream of decoded audio data from a track."
 attributes = ["Resource"]
 
 [components."core::app::cursor_position"]

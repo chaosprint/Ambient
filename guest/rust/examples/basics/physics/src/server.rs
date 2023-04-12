@@ -10,11 +10,13 @@ use ambient_api::{
         primitives::cube,
         rendering::{cast_shadows, color},
         transform::{lookat_center, rotation, scale, translation},
-        audio::audio_emitter,
+        // audio::{audio_emitter, audio_listener},
     },
     concepts::{make_perspective_infinite_reverse_camera, make_transformable},
     prelude::*,
 };
+
+use crate::components::bonk;
 
 #[main]
 pub async fn main() {
@@ -23,8 +25,15 @@ pub async fn main() {
         .with(aspect_ratio_from_window(), EntityId::resources())
         .with_default(main_scene())
         .with(translation(), vec3(5., 5., 4.))
+        // .with(audio_listener(), audio::listener(Mat4::IDENTITY, Vec3::X * 0.3))
         .with(lookat_center(), vec3(0., 0., 0.))
         .spawn();
+
+    // emitter attenuation
+    let amp = 1.0;
+    let quad = 0.1;
+    let lin = 0.0;
+    let constant = 1.0;
 
     let cube = Entity::new()
         .with_merge(make_transformable())
@@ -40,6 +49,7 @@ pub async fn main() {
         .with(rotation(), Quat::IDENTITY)
         .with(scale(), vec3(0.5, 0.5, 0.5))
         .with(color(), Vec4::ONE)
+        // .with(audio_emitter(), audio::emitter(Vec3::ZERO, amp, quad, lin, constant))
         .spawn();
 
     Entity::new()
@@ -47,15 +57,20 @@ pub async fn main() {
         .with(prefab_from_url(), asset::url("assets/Shape.glb").unwrap())
         .spawn();
 
-    ambient_api::messages::Collision::subscribe(|msg| {
+    audio::add_sound(bonk(), asset::url("assets/bonk.ogg").unwrap());
+
+    ambient_api::messages::Collision::subscribe(move |msg| {
         // TODO: play a sound instead
+
+        // play_sound_on_entity(world, id, track.decode().repeat()).expect("Failed to play sound");
+        // audio::play_sound_on_entity(cube, "bonk"); //asset::url("assets/bonk.ogg").unwrap()
         println!("Bonk! {:?} collided", msg.ids);
     });
 
     ambient_api::messages::Frame::subscribe(move |_| {
         for hit in physics::raycast(Vec3::Z * 20., -Vec3::Z) {
             if hit.entity == cube {
-                println!("The raycast hit the cube: {hit:?}");
+                // println!("The raycast hit the cube: {hit:?}");
             }
         }
     });

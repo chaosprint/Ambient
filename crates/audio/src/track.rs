@@ -51,6 +51,17 @@ pub enum TrackDecodeStream {
     Wav(WavDecodeStream),
 }
 
+impl TrackDecodeStream {
+    pub fn to_vec(&mut self) -> Vec<f32> {
+        let mut vec = Vec::new();
+        while let Some(sample) = self.next_sample() {
+            vec.push(sample[0]);
+            vec.push(sample[1]);
+        }
+        vec
+    }
+}
+
 impl Source for TrackDecodeStream {
     fn next_sample(&mut self) -> Option<crate::Frame> {
         match self {

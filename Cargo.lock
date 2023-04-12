@@ -1422,6 +1422,7 @@ version = "0.2.0-dev"
 dependencies = [
  "ambient_animation",
  "ambient_app",
+ "ambient_audio",
  "ambient_core",
  "ambient_ecs",
  "ambient_input",

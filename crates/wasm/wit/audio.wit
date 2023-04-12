@@ -1,3 +1,8 @@
 default interface asset {
-    spawn-emitters: func(path: string)
+    use pkg.types.{entity-id, vec3}
+
+    add-sound: func(index: u32, path: string)
+    play-sound-on-entity: func(entity: entity-id, path: string)
+    listener: func()
+    emitter: func()
 }
