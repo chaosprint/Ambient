@@ -23,10 +23,18 @@ components!("audio", {
     hrtf_lib: Arc<HrtfLib>,
     audio_emitter: Arc<Mutex<AudioEmitter>>,
     audio_listener: Arc<Mutex<AudioListener>>,
-
     @[Resource]
-    audio_mixer: AudioMixer,
+    audio_sender: Arc<Mutex<std::sync::mpsc::Sender<AudioMessage>>>,
+    @[Resource]
+    audio_mixer: Arc<Mutex<AudioMixer>>,
 });
+
+pub enum AudioMessage {
+    Track(Arc<ambient_audio::track::Track>),
+    Pause,
+    Resume,
+    Stop,
+}
 
 /// TODO: hook this into the Attenuation inside ambient_audio
 #[derive(Serialize, Deserialize, Debug, Clone, Copy, DerefMut, Deref, From, Into)]

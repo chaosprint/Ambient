@@ -10,11 +10,10 @@ use crate::{audio_emitter, audio_listener, audio_mixer, hrtf_lib};
 /// Initializes the HRTF sphere and adds the appropriate resources
 ///
 /// TODO: customizer IR sphere selection
-pub fn setup_audio(world: &mut World, mixer: AudioMixer) -> anyhow::Result<()> {
+pub fn setup_hrtf(world: &mut World) -> anyhow::Result<()> {
     let hrtf = Arc::new(HrtfLib::load(Cursor::new(include_bytes!("../IRC_1002_C.bin")))?);
     world.add_resource(hrtf_lib(), hrtf);
-    world.add_resource(audio_mixer(), mixer);
-
+    // world.add_resource(audio_mixer(), mixer);
     Ok(())
 }
 

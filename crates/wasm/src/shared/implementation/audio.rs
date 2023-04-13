@@ -1,5 +1,5 @@
 use ambient_std::asset_url::{AbsAssetUrl, AssetUrl};
-use ambient_world_audio::{play_sound_on_entity, audio_tracks as tracks, audio_emitter, audio_listener, hrtf_lib};
+use ambient_world_audio::{AudioMessage, play_sound_on_entity, audio_sender, audio_tracks as tracks, audio_emitter, audio_listener, hrtf_lib};
 use ambient_audio::{AudioFromUrl, track::TrackDecodeStream, Attenuation, AudioEmitter, Source};
 use ambient_network::{server::content_base_url, ServerWorldExt};
 use ambient_core::{asset_cache, async_ecs::async_run, hierarchy::children, runtime};
@@ -48,10 +48,12 @@ pub(crate) fn load(world: &mut World, soundurl: String) -> anyhow::Result<()> {
 
 pub(crate) fn play(world: &mut World, id: wit::types::EntityId, index: u32) -> anyhow::Result<()> {
     let source_vec = world.resource(tracks());
-    let source = source_vec[index as usize].clone().decode();
+    let source = source_vec[index as usize].clone();
 
-    let stream = ambient_audio::AudioStream::new().unwrap();
-    let sound = stream.mixer().play(source);
+    let sender = world.resource_mut(audio_sender());
+    sender.lock().send(AudioMessage::Track(source)).unwrap();
+    // let stream = ambient_audio::AudioStream::new().unwrap();
+    // let sound = stream.mixer().play(source);
     Ok(())
 }
 

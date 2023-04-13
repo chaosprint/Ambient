@@ -130,7 +130,7 @@ impl AudioMixer {
     /// Play a source on the mixer, returning a handle which can be used to control it
     pub fn play<S: Source + 'static>(&self, source: S) -> Sound {
         let sample_rate = source.sample_rate();
-        println!("play got Sample rate: {:?}", sample_rate);
+        // println!("play got Sample rate: {:?}", sample_rate);
         let source = if sample_rate == self.inner.sample_rate {
             Box::new(source) as Box<dyn Source>
         } else {
